@@ -19,17 +19,17 @@ s32 gThread30LoadDelay = 0;
 /************ .bss ************/
 
 // Used for __osException, but .bss file order is weird. Need to fix later.
-u8 leoDiskStack[16]; //technically should have a OS_LEO_STACKSIZE or something. This is something like 4096 in libreultra...
+u8 leoDiskStack[16]; // technically should have a OS_LEO_STACKSIZE or something. This is something like 4096 in libreultra...
 OSThread gThread30;
 OSMesgQueue gThread30MesgQueue;
 OSMesg gThread30Message;
-s32 gPadding; //Unused?
+s32 gPadding; // Unused?
 
 s32 D_8012ACC0[1305]; // Unused? Might be another stack.
 
 // Currently defined in osViMgr.c
 // There are a few stacks defined next to each other. Maybe they are in their own separate file?
-extern void *gThread30Stack; 
+extern void *gThread30Stack;
 
 /*****************************/
 
@@ -99,11 +99,11 @@ s32 set_level_to_load_in_background(s32 levelId, s32 cutsceneId) {
  */
 void thread30(void *arg) {
     OSMesg mesg = 0;
-    while(TRUE){
+    while (TRUE) {
         // Wait for a signal from the main thread
         do {
             osRecvMesg(&gThread30MesgQueue, &mesg, 1);
-        } while(mesg != (OSMesg)OS_MESG_TYPE_LOOPBACK);
+        } while (mesg != (OSMesg)OS_MESG_TYPE_LOOPBACK);
         // -1 means there won't be any racers loaded.
         load_level_for_menu(gThread30LevelIdToLoad, -1, gThread30CutsceneIdToLoad);
         gThread30NeedToLoadLevel = FALSE;

@@ -27,69 +27,48 @@ s32 D_800DCB5C = 0; // Currently unknown, might be a different type.
 
 // Not sure if D_800DCB58 & D_800DCB5C are actually a part of this array.
 f32 D_800DCB60[14] = {
-    -10.0f, 5.0f, 0.0f, 0.0f,
-    10.0f, 5.0f, 0.0f, 0.0f,
-    -10.0f, 10.0f, 0.0f, 0.0f, 
-    10.0f, 10.0f,
+    -10.0f, 5.0f, 0.0f, 0.0f, 10.0f, 5.0f, 0.0f, 0.0f, -10.0f, 10.0f, 0.0f, 0.0f, 10.0f, 10.0f,
 };
 
 s32 D_800DCB98 = 0; // Currently unknown, might be a different type.
-f32 D_800DCB9C[19] = { 
-    0.004f, 0.007f, 0.0099999999f, 0.004f, 
-    0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 
-    0.0099999999f, 0.0099999999f, 0.004f, 0.004f, 
-    0.004f, 0.004f, 0.004f, 0.004f, 
-    0.004f, 0.004f, 0.004f,
+f32 D_800DCB9C[19] = {
+    0.004f, 0.007f, 0.0099999999f, 0.004f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f, 0.0099999999f,
+    0.004f, 0.004f, 0.004f,        0.004f, 0.004f,        0.004f,        0.004f,        0.004f,        0.004f,
 };
 
 f32 D_800DCBE8[19] = {
-    0.8f, 0.85f, 0.85f, 0.5f,
-    0.5f, 0.5f, 0.5f, 0.5f,
-    0.5f, 0.5f, 0.5f, 0.8f,
-    0.8f, 0.84f, 0.8f, 0.8f,
-    0.8f, 0.8f, 0.8f,
+    0.8f, 0.85f, 0.85f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.8f, 0.8f, 0.84f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f,
 };
 
 // Unused? Not sure if this is actually an array or just some random data.
 s32 D_800DCC34[19] = {
-    0, 1, 1, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0,
+    0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 s32 D_800DCC80[13] = {
-    0, 26, 27, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0,
+    0, 26, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 // Unused?
 s16 D_800DCCB4[12] = {
-    0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
 u16 D_800DCCCC[20] = {
-    0x010C, 0x010B, 0x0009, 0x010C,
-    0x010C, 0x010C, 0x010C, 0x010C, 
-    0x010C, 0x010C, 0x010C, 0x0005, 
-    0x010C, 0x010C, 0x010C, 0x010C, 
-    0x010C, 0x010C, 0x010C, 0x0000,
+    0x010C, 0x010B, 0x0009, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C,
+    0x010C, 0x0005, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x010C, 0x0000,
 };
 
 s32 D_800DCCF4[19] = {
-    1, 4, 16, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 0x100, 1, 1, 1, 1, 1, 
+    1, 4, 16, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0x100, 1, 1, 1, 1, 1,
 };
 
 s32 D_800DCD40[20] = {
-    0, 4, 16, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0x100, 0, 0, 0, 0,
-    0, 0,
+    0, 4, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x100, 0, 0, 0, 0, 0, 0,
 };
 
 s8 D_800DCD90[15] = {
-    1, 1, 2, 2, 4, 3, 0, 6,
-    4, 3, 2, 2, 5, 5, 5,
+    1, 1, 2, 2, 4, 3, 0, 6, 4, 3, 2, 2, 5, 5, 5,
 };
 
 // Unused?
@@ -98,15 +77,12 @@ s8 D_800DCDA0[8] = {
 };
 
 s8 D_800DCDA8[8] = {
-    1, 1, 1, 2, 3, 2, 3, 2 ,
+    1, 1, 1, 2, 3, 2, 3, 2,
 };
 
 // Unused?
 s16 D_800DCDB0[16] = {
-    0x02FE, 0x03FE, 0x02FC, 0x02FB,
-    0x02FB, 0x02FE, 0x02FD, 0x02FE,
-    0x03FD, 0x05FC, 0x04FE, 0x02FE,
-    0x02FA, 0x02FE, 0x08F8, 0x03FD,
+    0x02FE, 0x03FE, 0x02FC, 0x02FB, 0x02FB, 0x02FE, 0x02FD, 0x02FE, 0x03FD, 0x05FC, 0x04FE, 0x02FE, 0x02FA, 0x02FE, 0x08F8, 0x03FD,
 };
 
 // Checksum count for func_8003B4BC
@@ -215,7 +191,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80049794.s")
 void func_8004C0A0(s32 arg0, Object *planeObj, Object_64_8004C0A0 *planeObj64) {
     s32 temp_v1;
     s32 phi_v0;
-    
+
     if (planeObj64->unk1D7 != 10) {
         //!@bug Typo. Should've been `== 0`, not `= 0`.
         if (planeObj64->unk1F2 = 0) {
@@ -269,7 +245,7 @@ void func_8004C140(Object *obj, Object_64_8004C140 *obj64) {
     }
     if (obj64->unk1D6 < 5) {
         func_800570B8(obj, 0x1C2, 8, 0x81);
-        switch(obj64->unk187) {
+        switch (obj64->unk187) {
             case 1:
             case 2:
                 if (phi_v1 != 0) {
@@ -301,7 +277,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004D590.s")
 
 void func_8004D95C(s32 arg0, s32 arg1, Object *obj, Object_64_8004D95C *obj64) {
     s16 sp26;
-    
+
     if (obj64->unk118 != 0) {
         func_80006AC8(obj);
     }
@@ -361,24 +337,24 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_8004F7F4.s")
 #ifdef NON_MATCHING
 
 typedef struct Object_64_80050754 {
-            u8 unk0[0x2C];
-            f32 unk2C;
-            f32 unk30;
-            u8 unk34[0x114];
-/* 0x148 */ Object *someObj;
-            u8 unk14C[0x54];
-/* 0x1A0 */ s16 unk1A0;
-/* 0x1A2 */ s16 unk1A2;
-/* 0x1A4 */ s16 unk1A4;
-            u8 unk1A6[0x4C];
-/* 0x1F2 */ s8 unk1F2;
+    u8 unk0[0x2C];
+    f32 unk2C;
+    f32 unk30;
+    u8 unk34[0x114];
+    /* 0x148 */ Object *someObj;
+    u8 unk14C[0x54];
+    /* 0x1A0 */ s16 unk1A0;
+    /* 0x1A2 */ s16 unk1A2;
+    /* 0x1A4 */ s16 unk1A4;
+    u8 unk1A6[0x4C];
+    /* 0x1F2 */ s8 unk1F2;
 } Object_64_80050754;
 
 // Mainly has regalloc issues.
 void func_80050754(Object *obj, Object_64_80050754 *obj64, f32 arg2) {
     f32 xDiff, yDiff, zDiff;
     Object *someObj;
-    
+
     obj->unk3B = 0;
     obj->unk18 = 0x28;
     someObj = obj64->someObj;
@@ -495,7 +471,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80052D7C.s")
 void func_80053478(Object_64_80053478 *obj) {
     s32 phi_v0;
     f32 phi_f0 = obj->unk2C;
-    
+
     if (phi_f0 < 0.0) {
         phi_f0 = -phi_f0;
     }
@@ -622,7 +598,7 @@ void func_800570B8(Object *obj, s32 arg1, s32 arg2, s32 arg3) {
                         phi_t0 = (get_random_number_from_range(0, arg2) * 12) + arg1;
                     }
                 }
-                //sp34 = phi_t0;
+                // sp34 = phi_t0;
                 func_80009558(phi_t0, obj->x_position, obj->y_position, obj->z_position, 4, &obj64->unk24);
                 obj64->unk28 = phi_t0;
             }
@@ -637,7 +613,7 @@ GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80057220.s")
 
 void func_800575EC(Object *obj, Object_64_800575EC *obj64) {
     Matrix mf;
-    
+
     D_8011D510.unk0 = obj->y_rotation;
     D_8011D510.unk2 = obj->x_rotation;
     D_8011D510.unk4 = 0;
@@ -703,7 +679,8 @@ void func_80058F44(f32 arg0, Object *arg1, Object *arg2) {
     temp1 = func_8007066C(gCameraObject->x_position - arg1->x_position, gCameraObject->z_position - arg1->z_position);
     gCameraObject->y_rotation += (((-temp1 - gCameraObject->y_rotation) + 0x8000) * temp0) >> 4;
     gCameraObject->z_rotation -= (gCameraObject->z_rotation * temp0) >> 4;
-    gCameraObject->unk34 = get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);
+    gCameraObject->unk34 =
+        get_level_segment_index_from_position(gCameraObject->x_position, arg2->unk3C_a.unk3C_f, gCameraObject->z_position);
 }
 #else
 GLOBAL_ASM("asm/non_matchings/unknown_043920/func_80058F44.s")
@@ -721,14 +698,14 @@ void func_80059790(s32 arg0, s32 *arg1, s32 *arg2, s32 *arg3) {
     }
     temp_lo = arg0 / 3600;
     *arg1 = temp_lo;
-    temp_lo_2 = (s32) (arg0 - (temp_lo * 3600)) / 60;
+    temp_lo_2 = (s32)(arg0 - (temp_lo * 3600)) / 60;
     *arg2 = temp_lo_2;
-    *arg3 = (s32) ((s32) (((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
+    *arg3 = (s32)((s32)(((arg0 - (*arg1 * 3600)) - (temp_lo_2 * 60)) * 100) / 60);
 }
 
 void func_800598D0(void) {
     gGhostData[0] = allocate_from_main_pool_safe(0x21C0, COLOR_TAG_RED);
-    gGhostData[1] = (GhostNode*)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
+    gGhostData[1] = (GhostNode *)gGhostData[0] + MAX_NUMBER_OF_GHOST_NODES;
     gGhostData[2] = NULL; // T.T. Ghost
     D_8011D5A0[0] = 0;
     D_8011D5A0[1] = 0;
@@ -747,7 +724,7 @@ void func_80059944(void) {
 }
 
 void func_80059984(s32 arg0) {
-    D_8011D59D = (s8) ((D_8011D59C + 1) & 1);
+    D_8011D59D = (s8)((D_8011D59C + 1) & 1);
     D_8011D5AC = arg0;
 }
 
@@ -775,7 +752,7 @@ s32 func_800599B8(s32 arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
 }
 
 /**
- * Loads T.T. ghost node data into gGhostData[2]. 
+ * Loads T.T. ghost node data into gGhostData[2].
  * Returns 0 if successful, or 1 if an error occured.
  */
 s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
@@ -789,7 +766,7 @@ s32 load_tt_ghost(s32 ghostOffset, s32 size, s16 *outTime) {
         if (gGhostData[2] != NULL) {
             *outTime = ghost->time;
             gTTGhostNodeCount = ghost->nodeCount;
-            bcopy((u8*)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
+            bcopy((u8 *)ghost + 8, gGhostData[2], size - sizeof(GhostHeader));
             free_from_memory_pool(ghost);
             return 0;
         }
@@ -828,9 +805,9 @@ void func_8005A3C0(void) {
 void func_8005A3D0(void) {
     s32 i;
     s32 count = 0;
-    u8 *temp = (u8*)&func_8003B4BC;
+    u8 *temp = (u8 *)&func_8003B4BC;
 
-    for(i = 0; i < D_800DCB50; i++) {
+    for (i = 0; i < D_800DCB50; i++) {
         count += temp[i];
     }
 
@@ -854,7 +831,7 @@ void func_8005C270(unk8005C270 *arg0) {
     arg0->unk192--;
     if (arg0->unk192 < 0) {
         arg0->unk192 += temp;
-        if(arg0->unk193 > 0){
+        if (arg0->unk193 > 0) {
             arg0->unk193--;
         }
     }

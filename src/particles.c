@@ -76,18 +76,15 @@ unk800E2D08 D_800E2D08[5] = {
 };
 
 unk800E2D58 D_800E2D58[5] = {
-    { 0x0000, 0x01FF, 0x01FF }, 
-    { 0x0000, 0x01FF, 0x01FF }, 
-    { 0x0000, 0x0000, 0x01FF }, 
-    { 0x0000, 0x0000, 0x01FF }, 
-    { 0x0000, 0x01FF, 0x01FF },
+    { 0x0000, 0x01FF, 0x01FF }, { 0x0000, 0x01FF, 0x01FF }, { 0x0000, 0x0000, 0x01FF },
+    { 0x0000, 0x0000, 0x01FF }, { 0x0000, 0x01FF, 0x01FF },
 };
 
 // Are these just Triangles?
 unk800E2D08 D_800E2D78[8] = {
-    { 0x0000, 0x0105, 0x0000, 0x0000, 0x0080, 0x0000, 0x0080, 0x01FF }, 
-    { 0x0000, 0x0504, 0x0000, 0x0000, 0x0080, 0x01FF, 0x0000, 0x01FF }, 
-    { 0x0001, 0x0206, 0x0080, 0x0000, 0x0100, 0x0000, 0x0100, 0x01FF }, 
+    { 0x0000, 0x0105, 0x0000, 0x0000, 0x0080, 0x0000, 0x0080, 0x01FF },
+    { 0x0000, 0x0504, 0x0000, 0x0000, 0x0080, 0x01FF, 0x0000, 0x01FF },
+    { 0x0001, 0x0206, 0x0080, 0x0000, 0x0100, 0x0000, 0x0100, 0x01FF },
     { 0x0001, 0x0605, 0x0080, 0x0000, 0x0100, 0x01FF, 0x0080, 0x01FF },
     { 0x0002, 0x0307, 0x0100, 0x0000, 0x0180, 0x0000, 0x0180, 0x01FF },
     { 0x0002, 0x0706, 0x0100, 0x0000, 0x0180, 0x01FF, 0x0100, 0x01FF },
@@ -96,21 +93,13 @@ unk800E2D08 D_800E2D78[8] = {
 };
 
 unk800E2D58 D_800E2DF8[8] = {
-    { 0x0000, 0x0000, 0x01FF },
-    { 0x0000, 0x01FF, 0x01FF },
-    { 0x0000, 0x0000, 0x01FF },
-    { 0x0000, 0x01FF, 0x01FF },
-    { 0x0000, 0x0000, 0x01FF },
-    { 0x0000, 0x01FF, 0x01FF },
-    { 0x0000, 0x0000, 0x01FF },
-    { 0x0000, 0x01FF, 0x01FF },
+    { 0x0000, 0x0000, 0x01FF }, { 0x0000, 0x01FF, 0x01FF }, { 0x0000, 0x0000, 0x01FF }, { 0x0000, 0x01FF, 0x01FF },
+    { 0x0000, 0x0000, 0x01FF }, { 0x0000, 0x01FF, 0x01FF }, { 0x0000, 0x0000, 0x01FF }, { 0x0000, 0x01FF, 0x01FF },
 };
 
 s16 D_800E2E28 = 0;
 
-f32 D_800E2E2C[8] = {
-    0.0f, 0.1, 0.2f, 0.3f, 0.45f, 0.525f, 0.6f, 0.8f
-};
+f32 D_800E2E2C[8] = { 0.0f, 0.1, 0.2f, 0.3f, 0.45f, 0.525f, 0.6f, 0.8f };
 
 s32 D_800E2E4C = 0;
 s32 D_800E2E50 = 0;
@@ -118,33 +107,21 @@ s32 D_800E2E54 = 0;
 s32 D_800E2E58 = 0;
 s32 D_800E2E5C = 0;
 s32 *D_800E2E60 = NULL;
-s32  D_800E2E64 = 0;
+s32 D_800E2E64 = 0;
 
 s16 D_800E2E68[6] = {
-     0,  8,
-     7, -4,
-    -7, -4,
+    0, 8, 7, -4, -7, -4,
 };
 
 s16 D_800E2E74[8] = {
-    -6,  6, 
-     6,  6, 
-     6, -6, 
-    -6, -6,
+    -6, 6, 6, 6, 6, -6, -6, -6,
 };
 
-s32 D_800E2E84[16] = {
-    0x00000000, 0xC00840FF, 0xFF6008FF, 0x404040FF, 
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 
-    0x00000000, 0x00000000, 0x00000000, 0x00000000, 
-    0x00000000, 0x1070FFFF, 0x00000000, 0x00000000
-};
+s32 D_800E2E84[16] = { 0x00000000, 0xC00840FF, 0xFF6008FF, 0x404040FF, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
+                       0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x1070FFFF, 0x00000000, 0x00000000 };
 
-s32 D_800E2EC4[10] = {
-    0x404040FF, 0x404040FF, 0x002D00FF, 0x002D00FF, 
-    0x403C0AFF, 0x403C0AFF, 0x4040FFFF, 0x4040FFFF, 
-    0x404040FF, 0x404040FF
-};
+s32 D_800E2EC4[10] = { 0x404040FF, 0x404040FF, 0x002D00FF, 0x002D00FF, 0x403C0AFF,
+                       0x403C0AFF, 0x4040FFFF, 0x4040FFFF, 0x404040FF, 0x404040FF };
 
 s32 D_800E2EEC = 0x100;
 
@@ -273,23 +250,23 @@ void func_800AE490(void) {
 #ifdef NON_MATCHING
 void init_particle_assets(void) {
     s32 i;
-    
+
     func_800AE490();
     gParticlesAssetTable = load_asset_section_from_rom(ASSET_PARTICLES_TABLE);
-    
-    for(gParticlesAssetTableCount = -1; (s32)gParticlesAssetTable[gParticlesAssetTableCount + 1] != -1; gParticlesAssetTableCount++){
-    }
+
+    for (gParticlesAssetTableCount = -1; (s32)gParticlesAssetTable[gParticlesAssetTableCount + 1] != -1;
+         gParticlesAssetTableCount++) {}
     gParticlesAssets = load_asset_section_from_rom(ASSET_PARTICLES);
-    for(i = 0; i < gParticlesAssetTableCount; i++) {
-        gParticlesAssetTable[i] = (u8*)gParticlesAssets + (s32)gParticlesAssetTable[i];
+    for (i = 0; i < gParticlesAssetTableCount; i++) {
+        gParticlesAssetTable[i] = (u8 *)gParticlesAssets + (s32)gParticlesAssetTable[i];
     }
     gParticleBehaviorsAssetTable = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS_TABLE);
-    for(gParticleBehaviorsAssetTableCount = -1; (s32)gParticleBehaviorsAssetTable[gParticleBehaviorsAssetTableCount + 1] != -1; gParticleBehaviorsAssetTableCount++){
-    }
+    for (gParticleBehaviorsAssetTableCount = -1; (s32)gParticleBehaviorsAssetTable[gParticleBehaviorsAssetTableCount + 1] != -1;
+         gParticleBehaviorsAssetTableCount++) {}
     gParticleBehaviorsAssets = load_asset_section_from_rom(ASSET_PARTICLE_BEHAVIORS);
-    for(i = 0; i < gParticleBehaviorsAssetTableCount; i++) {
-        gParticleBehaviorsAssetTable[i] = (u8*)gParticleBehaviorsAssets + (s32)gParticleBehaviorsAssetTable[i];
-        if((s32)gParticleBehaviorsAssetTable[i]->unk9C != -1) {
+    for (i = 0; i < gParticleBehaviorsAssetTableCount; i++) {
+        gParticleBehaviorsAssetTable[i] = (u8 *)gParticleBehaviorsAssets + (s32)gParticleBehaviorsAssetTable[i];
+        if ((s32)gParticleBehaviorsAssetTable[i]->unk9C != -1) {
             gParticleBehaviorsAssetTable[i]->unk9C = get_misc_asset(gParticleBehaviorsAssetTable[i]->unk9C);
         }
     }
@@ -306,12 +283,12 @@ void func_800AEE14(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     Vertex *temp;
     Triangle *tri;
     s16 *temp2;
-    
+
     arg0->unk4 = 3;
     arg0->unk8 = *arg1;
     temp = *arg1;
     temp2 = &D_800E2E68;
-    for(i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++) {
         temp->x = temp2[0];
         temp->y = temp2[1];
         temp2 += 2;
@@ -339,12 +316,12 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     Vertex *temp;
     Triangle *tri;
     s16 *temp2;
-    
+
     arg0->unk4 = 4;
     arg0->unk8 = *arg1;
     temp = *arg1;
     temp2 = &D_800E2E74;
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         temp->x = temp2[0];
         temp->y = temp2[1];
         temp2 += 2;
@@ -373,20 +350,20 @@ void func_800AEEB8(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     tri[1].vi1 = 2;
     tri[1].vi2 = 1;
     tri[1].uv2.v = 0;
-    tri+=2;
+    tri += 2;
     *arg2 = tri;
 }
 
 void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s32 i;
     Vertex *temp;
-    
+
     arg0->unk4 = 6;
     arg0->unk6 = 4;
     arg0->unk8 = *arg1;
     arg0->unkC = *arg2;
     temp = *arg1;
-    for(i = 0; i < 6; i++) {
+    for (i = 0; i < 6; i++) {
         temp->r = 255;
         temp->g = 255;
         temp->b = 255;
@@ -399,13 +376,13 @@ void func_800AEF88(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
 void func_800AF024(unk800AF024 *arg0, Vertex **arg1, Triangle **arg2) {
     s32 i;
     Vertex *temp;
-    
+
     arg0->unk4 = 8;
     arg0->unk6 = 8;
     arg0->unk8 = *arg1;
     arg0->unkC = *arg2;
     temp = *arg1;
-    for(i = 0; i < 16; i++) {
+    for (i = 0; i < 16; i++) {
         temp->r = 255;
         temp->g = 255;
         temp->b = 255;
@@ -438,7 +415,7 @@ void func_800AF0F0(Object *obj) {
     Object_44 *temp_v0;
     Object_44_C *temp_v1;
     s16 temp_t8, temp_t1;
-    
+
     temp_v0 = obj->unk44;
     temp_v1 = temp_v0->unkC;
     temp_t8 = (temp_v0->unk0->unk0 - 1) << 5;
@@ -479,7 +456,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     ParticleBehavior *temp_v1;
     s32 temp_v0_2;
     s32 flags;
-    
+
     temp_v1 = gParticleBehaviorsAssetTable[arg1];
     arg0->unk8 = arg2;
     arg0->unk18 = arg3;
@@ -487,9 +464,9 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
     arg0->unk1A = arg4;
     arg0->unk1C = arg5;
     arg0->unk1E = 0;
-    
+
     flags = temp_v1->flags;
-    
+
     if (flags & 0x4000) {
         arg0->unk4 = 0x4000;
         arg0->unk6 = 0;
@@ -505,7 +482,7 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
         } else {
             arg0->unk7 = 0xFF;
         }
-        arg0->unkB.unkC_400.unkC = (s32*)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
+        arg0->unkB.unkC_400.unkC = (s32 *)allocate_from_main_pool_safe(arg0->unk7 * 4, 0x80808080);
         arg0->unkB.unkC_400.unk10 = temp_v1->unk14;
         arg0->unkB.unkC_400.unk12 = temp_v1->unk16;
         arg0->unkB.unkC_400.unk14 = temp_v1->unk22;
@@ -526,14 +503,14 @@ void func_800AF29C(unk800AF29C *arg0, s32 arg1, s32 arg2, s16 arg3, s16 arg4, s1
 // Should be functionally equivalent.
 void func_800AF404(s32 arg0) {
     s32 i;
-    
+
     D_800E2E28 = (D_800E2E28 + (arg0 * 64)) & 0x1FF;
-    for(i = 0; i < 5; i++) {
+    for (i = 0; i < 5; i++) {
         D_800E2D08[i].unk6 = D_800E2D58[i].unk0 + D_800E2E28;
         D_800E2D08[i].unkA = D_800E2D58[i].unk2 + D_800E2E28;
         D_800E2D08[i].unkE = D_800E2D58[i].unk4 + D_800E2E28;
     }
-    for(i = 0; i < 8; i++) {
+    for (i = 0; i < 8; i++) {
         D_800E2D78[i].unk6 = D_800E2DF8[i].unk0 + D_800E2E28;
         D_800E2D78[i].unkA = D_800E2DF8[i].unk2 + D_800E2E28;
         D_800E2D78[i].unkE = D_800E2DF8[i].unk4 + D_800E2E28;
@@ -549,7 +526,7 @@ void func_800AF6E4(Object *obj, s32 arg1) {
     Object_6C *obj6C;
 
     obj6C = &obj->unk6C[arg1];
-    
+
     obj6C->unk4 &= 0x7FFF;
     obj->unk1A--;
 }
@@ -568,7 +545,7 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B2040.s")
 void func_800B2260(unk800B2260 *arg0) {
     unk800B2260_C *temp_v0;
     s32 i;
-    
+
     if (arg0->unk4 & 0x400) {
         if (arg0->unkC != NULL) {
             for (i = 0; i < arg0->unk6; i++) {
@@ -590,13 +567,13 @@ GLOBAL_ASM("asm/non_matchings/particles/func_800B22FC.s")
 void func_800B263C(unk800B2260_C *arg0) {
     unk800B2260 *temp_v0;
     s32 i;
-    
+
     temp_v0 = (unk800B2260 *)arg0->unk70;
     if (temp_v0 != NULL) {
         if (temp_v0->unk6 != 0) {
             if (arg0 == temp_v0->unkC[arg0->unk74]) {
                 temp_v0->unk6--;
-                for(i = arg0->unk74; i < temp_v0->unk6; i++) {
+                for (i = arg0->unk74; i < temp_v0->unk6; i++) {
                     temp_v0->unkC[i] = temp_v0->unkC[i + 1];
                     temp_v0->unkC[i]->unk74 = i;
                 }
