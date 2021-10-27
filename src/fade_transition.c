@@ -361,21 +361,23 @@ GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C1130.s")
 
 void render_fade_barndoor_horizontal(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
-        // TODO: Need to clean this up.
-        gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
-        gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
-        func_8007B3D0(dlist);
+    gSPDisplayList((*dlist)++, D_800E3648);
+    // TODO: Need to clean this up.
+    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000,
+                 (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
+    func_8007B3D0(dlist);
 }
 
 // This is exactly the same as render_fade_barndoor_horizontal; I wonder what gets changed then?
 void render_fade_barndoor_vertical(Gfx **dlist, s32 arg1, s32 arg2) {
     func_8007B3D0(dlist);
-    gSPDisplayList((*dlist)++, D_800E3648)
-        // TODO: Need to clean this up.
-        gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000, (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
-        gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
-        func_8007B3D0(dlist);
+    gSPDisplayList((*dlist)++, D_800E3648);
+    // TODO: Need to clean this up.
+    gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000,
+                 (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x58, 0x70);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 8, TRIN_DISABLE_TEXTURE);
+    func_8007B3D0(dlist);
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C15D4.s")
@@ -397,11 +399,11 @@ void render_fade_circle(Gfx **dlist, s32 arg1, s32 arg2) {
     addr += 0xB4;
     addr2 += 0x100;
     gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+        gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     addr += 0xB4;
     addr2 += 0x100;
     gDkrVertices((*dlist)++, (s32)addr, ((s32)addr & 6) | 0x88, 0xA6)
-    gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
+        gDkrTriangles((*dlist)++, (s32)addr2, 16, TRIN_DISABLE_TEXTURE);
     func_8007B3D0(dlist);
 }
 #else
@@ -435,8 +437,8 @@ void render_fade_barndoor_diagonal(Gfx **dlist, s32 arg1, s32 arg2) {
         // TODO: Need to clean this up.
         gDkrVertices((*dlist)++, (s32)D_800E31C0[D_800E31D0[0]] + 0x80000000,
                      (((s32)D_800E31C0[D_800E31D0[0]] + 0x80000000) & 6) | 0x48, 0x5E);
-        gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE);
-        func_8007B3D0(dlist);
+    gDkrTriangles((*dlist)++, (s32)D_800E31C8[D_800E31D0[0]] + 0x80000000, 6, TRIN_DISABLE_TEXTURE);
+    func_8007B3D0(dlist);
 }
 
 GLOBAL_ASM("asm/non_matchings/fade_transition/func_800C2640.s")
