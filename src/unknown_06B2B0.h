@@ -147,7 +147,7 @@ void func_8006EA58(void);
 Settings *get_settings(void);
 s8 is_game_paused(void);
 s8 func_8006EAB0(void);
-s32 func_8006EAC0(void);
+s32 check_reset_pressed(void);
 s32 func_8006EB14(void);
 void func_8006EB24(void);
 void func_8006EB40(void);

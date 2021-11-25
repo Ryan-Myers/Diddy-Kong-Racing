@@ -119,8 +119,8 @@ void thread0_Main(s32 arg0) { // Has regalloc issues
     s32 s0 = 0;
 
     osCreateMesgQueue(&D_80129790, &D_801297A8, 8);
-    osSetEventMesg(12, &D_80129790, 8);
-    osSetEventMesg(10, &D_80129790, 2);
+    osSetEventMesg(OS_EVENT_FAULT, &D_80129790, 8);
+    osSetEventMesg(OS_EVENT_CPU_BREAK, &D_80129790, 2);
     osCreatePiManager(150, &D_801297E8, &D_801297C8, 8);
 
     while (1) {
@@ -241,8 +241,8 @@ s32 func_800B76DC(void) {
     }
 }
 
-void func_800B77D4(s32 arg0) {
-    D_800E3028 += arg0;
+void func_800B77D4(s32 mulFactor) {
+    D_800E3028 += mulFactor;
     if (D_800E3028 >= 0x3D) {
         D_800E3028 = 0;
         D_800E3024++;

@@ -282,12 +282,12 @@ void func_80000CBC(void) {
     set_relative_volume_for_music(musicRelativeVolume);
 }
 
-void func_80000D00(u8 arg0) {
+void func_80000D00(u8 mulFactor) {
     s32 reg_s2;
     s32 j;
     if (D_80115D3C > 0) {
 
-        D_80115D38 += arg0;
+        D_80115D38 += mulFactor;
         D_800DC650 = ((f32)D_80115D38) / ((f32)D_80115D3C);
 
         if ((f64)D_800DC650 > 1.0f) {
@@ -298,7 +298,7 @@ void func_80000D00(u8 arg0) {
         set_relative_volume_for_music(musicRelativeVolume);
     } else if (D_80115D3C < 0) {
 
-        D_80115D38 -= arg0;
+        D_80115D38 -= mulFactor;
         D_800DC650 = 1.0f - ((f32)D_80115D38) / ((f32)D_80115D3C);
         if ((f64)D_800DC650 < 0) {
             D_80115D38 = 0;
@@ -309,9 +309,9 @@ void func_80000D00(u8 arg0) {
     }
 
     if (D_800DC658 > 0) {
-        //reg_arg0 = arg0;
+        //reg_arg0 = mulFactor;
         for (reg_s2 = 0; reg_s2 < D_800DC658;) {
-            D_80115D48[reg_s2].unk2 -= arg0;
+            D_80115D48[reg_s2].unk2 -= mulFactor;
             if (D_80115D48[reg_s2].unk2 <= 0) {
                 j = reg_s2;
                 func_80001D04(D_80115D48[reg_s2].unk0, D_80115D48[reg_s2].unk4);
@@ -770,7 +770,7 @@ GLOBAL_ASM("asm/non_matchings/audio/func_8000232C.s")
 #else
 void func_8000232C(ALSeqPlayer *seqp, void *ptr, u8 *arg2, ALCSeq *seq) {
     if (alCSPGetState(seqp) == AL_STOPPED && *arg2) {
-        /*load_asset_to_address(ASSET_AUDIO, ptr, 
+        /*load_asset_to_address(ASSET_AUDIO, ptr,
             (u32)((ALSeqFile_80115CF8->seqArray)[*arg2]) - get_rom_offset_of_asset(ASSET_AUDIO,0),
             *((u32*)(((*arg2) << 3) + D_80115D0C)));*/
         alCSeqNew(seq, ptr);

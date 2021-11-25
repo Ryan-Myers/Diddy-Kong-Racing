@@ -53,8 +53,8 @@ glabel func_8006DCF8
 /* 06E9A4 8006DDA4 00000000 */   nop   
 /* 06E9A8 8006DDA8 0C01B6F9 */  jal   func_8006DBE4
 /* 06E9AC 8006DDAC 00000000 */   nop   
-/* 06E9B0 8006DDB0 3C0D8012 */  lui   $t5, %hi(D_801234E8) # $t5, 0x8012
-/* 06E9B4 8006DDB4 8DAD34E8 */  lw    $t5, %lo(D_801234E8)($t5)
+/* 06E9B0 8006DDB0 3C0D8012 */  lui   $t5, %hi(gSPTaskNum) # $t5, 0x8012
+/* 06E9B4 8006DDB4 8DAD34E8 */  lw    $t5, %lo(gSPTaskNum)($t5)
 /* 06E9B8 8006DDB8 3C0F8012 */  lui   $t7, %hi(gDisplayLists) # $t7, 0x8012
 /* 06E9BC 8006DDBC 000D7080 */  sll   $t6, $t5, 2
 /* 06E9C0 8006DDC0 01EE7821 */  addu  $t7, $t7, $t6
@@ -282,8 +282,8 @@ glabel L8006E0E0
 /* 06ED08 8006E108 00000000 */   nop   
 /* 06ED0C 8006E10C 0C01B6F9 */  jal   func_8006DBE4
 /* 06ED10 8006E110 00000000 */   nop   
-/* 06ED14 8006E114 3C0D8012 */  lui   $t5, %hi(D_801234E8) # $t5, 0x8012
-/* 06ED18 8006E118 8DAD34E8 */  lw    $t5, %lo(D_801234E8)($t5)
+/* 06ED14 8006E114 3C0D8012 */  lui   $t5, %hi(gSPTaskNum) # $t5, 0x8012
+/* 06ED18 8006E118 8DAD34E8 */  lw    $t5, %lo(gSPTaskNum)($t5)
 /* 06ED1C 8006E11C 3C0F8012 */  lui   $t7, %hi(gDisplayLists) # $t7, 0x8012
 /* 06ED20 8006E120 000D7080 */  sll   $t6, $t5, 2
 /* 06ED24 8006E124 01EE7821 */  addu  $t7, $t7, $t6
@@ -353,8 +353,8 @@ glabel L8006E0E0
 /* 06EE20 8006E220 8FBF0024 */   lw    $ra, 0x24($sp)
 /* 06EE24 8006E224 0C01B6F9 */  jal   func_8006DBE4
 /* 06EE28 8006E228 00000000 */   nop   
-/* 06EE2C 8006E22C 3C198012 */  lui   $t9, %hi(D_801234E8) # $t9, 0x8012
-/* 06EE30 8006E230 8F3934E8 */  lw    $t9, %lo(D_801234E8)($t9)
+/* 06EE2C 8006E22C 3C198012 */  lui   $t9, %hi(gSPTaskNum) # $t9, 0x8012
+/* 06EE30 8006E230 8F3934E8 */  lw    $t9, %lo(gSPTaskNum)($t9)
 /* 06EE34 8006E234 3C0D8012 */  lui   $t5, %hi(gDisplayLists) # $t5, 0x8012
 /* 06EE38 8006E238 00196080 */  sll   $t4, $t9, 2
 /* 06EE3C 8006E23C 01AC6821 */  addu  $t5, $t5, $t4
