@@ -47,7 +47,7 @@ s32 D_800DC760 = 9; // Currently unknown, might be a different type.
 s32 D_800DC764 = 0; // Currently unknown, might be a different type.
 s32 D_800DC768 = 0; // Currently unknown, might be a different type.
 
-f32 D_800DC76C[15] = { 
+f32 D_800DC76C[15] = {
     1.0f, 0.70711f, 0.70711f, 1.0f,
     0.0f, 0.70711f, -0.70711f, 0.0f,
     -1.0f, -0.70711f, -0.70711f, -1.0f,
@@ -1284,7 +1284,7 @@ void func_8001E45C(s32 arg0) {
         D_8011AE7A = arg0;
         D_8011ADAC = 0;
         D_8011AE7E = (u8)1;
-        if (func_8006DA0C() == 1) {
+        if (get_render_context() == DRAW_MENU) {
             func_8006F42C();
         }
     }

@@ -17,6 +17,15 @@
 #define TT_MENU_SAVE_GHOST        8
 #define TT_MENU_EXIT              10
 
+enum DialogueMenuCases {
+    DIALOG_TAJ,
+    DIALOG_UNK_01,
+    DIALOG_TT,
+    DIALOG_CHALLENGE,
+    DIALOG_TROPHY,
+    DIALOG_RACERESULT,
+};
+
 #define CHEAT(index) 1 << index
 
 typedef enum Cheats {

@@ -101,7 +101,7 @@ s8 D_800DD3F0 = 0;
 FadeTransition D_800DD3F4 = FADE_TRANSITION(128, FADE_COLOR_BLACK, 20, 0);
 // Unused?
 FadeTransition D_800DD3FC = FADE_TRANSITION(0, FADE_COLOR_WHITE, 20, -1);
-s32 gLogicMulFactor = 12;
+s32 sLogicMulFactor = 12;
 FadeTransition D_800DD408 = FADE_TRANSITION(0, FADE_COLOR_WHITE, 30, -1);
 // Unused?
 // CAR / HOV / PLN - So this is vehicle type?
@@ -144,7 +144,7 @@ s8 D_80121250[16];
 OSSched gMainSched; // 0x288 / 648 bytes
 s8 D_80121268[8192]; // 0x2000 / 8192 bytes Padding?
 s32 gSPTaskNum;
-s32 D_801234EC;
+s32 sRenderContext;
 s32 D_801234F0;
 s32 D_801234F4;
 s32 D_801234F8;
@@ -705,7 +705,7 @@ void func_8006BFC8(s8 *arg0) {
     if ((get_filtered_cheats() << 6) < 0) {
         phi_s0 = 9;
     }
-    if (func_8006DA0C() == 1) {
+    if (get_render_context() == DRAW_MENU) {
         phi_s0 = 5;
     }
     gTempAssetTable = load_asset_section_from_rom(ASSET_UNKNOWN_0_TABLE);
@@ -783,7 +783,7 @@ void thread3_main(s32 arg0) {
     func_8006C3E0();
     D_800DD37C = func_8006A1C4(D_800DD37C, 0);
     D_80123520 = 0;
-    D_801234EC = -1;
+    sRenderContext = DRAW_INTRO;
     while (1) {
         if (check_reset_pressed() != 0) {
             func_80072708();
@@ -890,13 +890,13 @@ void render(void) {
     set_rsp_segment(&gCurrDisplayList, 1, gVideoLastFramebuffer);
     set_rsp_segment(&gCurrDisplayList, 2, gVideoLastDepthBuffer);
     set_rsp_segment(&gCurrDisplayList, 4, gVideoLastFramebuffer - 0x500);
-    func_800780DC(&gCurrDisplayList);
-    func_80078054(&gCurrDisplayList);
+    init_rsp(&gCurrDisplayList);
+    init_rdp_and_framebuffer(&gCurrDisplayList);
     render_background(&gCurrDisplayList, &gCurrHudMat, 1);
-    D_800DD37C = func_8006A1C4(D_800DD37C, gLogicMulFactor);
+    D_800DD37C = func_8006A1C4(D_800DD37C, sLogicMulFactor);
     if (func_800B76DC() != 0) {
         render_epc_lock_up_display();
-        D_801234EC = 5;
+        sRenderContext = DRAW_CRASH_SCREEN;
     }
     if (D_800DD3A0 != 0) {
         phi_v0 = 0;
@@ -908,34 +908,34 @@ void render(void) {
         }
     }
 
-    switch (D_801234EC) {
-        case -1: // Pre-boot screen
+    switch (sRenderContext) {
+        case DRAW_INTRO: // Pre-boot screen
             func_8006F43C();
             break;
-        case 1: // In a menu
-            func_8006DCF8(gLogicMulFactor);
+        case DRAW_MENU: // In a menu
+            func_8006DCF8(sLogicMulFactor);
             break;
-        case 0: // In game (Controlling a character)
-            func_8006CCF0(gLogicMulFactor);
+        case DRAW_GAME: // In game (Controlling a character)
+            func_8006CCF0(sLogicMulFactor);
             break;
-        case 5: // EPC (lockup display)
-            func_800B77D4(gLogicMulFactor);
+        case DRAW_CRASH_SCREEN: // EPC (lockup display)
+            func_800B77D4(sLogicMulFactor);
             break;
     }
 
     // This is a good spot to place custom text if you want it to overlay it over ALL the
     // menus & gameplay.
 
-    func_80000D00((u8)gLogicMulFactor);
+    func_80000D00((u8)sLogicMulFactor);
     func_800B5F78(&gCurrDisplayList);
     func_800C56FC(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     func_800C5620(4);
     func_800C5494(4);
-    if (func_800C0494(gLogicMulFactor) != 0) {
+    if (func_800C0494(sLogicMulFactor) != 0) {
         render_fade_transition(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts);
     }
     if ((D_80123520 >= 8) && (func_8006F4C8() != 0)) {
-        func_800829F8(&gCurrDisplayList, gLogicMulFactor);
+        func_800829F8(&gCurrDisplayList, sLogicMulFactor);
     }
 
     gDPFullSync(gCurrDisplayList++);
@@ -966,10 +966,10 @@ void render(void) {
     // affects frameskipping, to maintain consistent game speed, through the (many)
     // dropped frames in DKR.
     tempLogicMulFactor = func_8007A98C(D_800DD380);
-    gLogicMulFactor = tempLogicMulFactor;
+    sLogicMulFactor = tempLogicMulFactor;
     tempLogicMulFactorMax = 6;
     if (tempLogicMulFactor > tempLogicMulFactorMax) {
-        gLogicMulFactor = tempLogicMulFactorMax;
+        sLogicMulFactor = tempLogicMulFactorMax;
     }
 }
 
@@ -1041,7 +1041,7 @@ void func_8006CCF0(s32 mulFactor) {
         func_80010994(mulFactor);
         if (func_80066510() == 0 || func_8001139C()) {
             if ((buttonPressedInputs & START_BUTTON) && (func_8006C2F0() == 0) && (D_800DD390 == 0)
-                && (D_801234EC == 0) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
+                && (sRenderContext == DRAW_GAME) && (D_80123516 == 0) && (D_800DD394 == 0) && (D_800DD398 == 0)) {
                 buttonPressedInputs = 0;
                 gIsPaused = TRUE;
                 func_80093A40();
@@ -1060,7 +1060,7 @@ void func_8006CCF0(s32 mulFactor) {
     gParticlePtrList_flush();
     func_8001BF20();
     func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, mulFactor);
-    if (D_801234EC == 0) {
+    if (sRenderContext == DRAW_GAME) {
         // Ignore the user's L/R/Z buttons.
         buttonHeldInputs &= ~(L_TRIG | R_TRIG | Z_TRIG);
     }
@@ -1169,7 +1169,7 @@ void func_8006CCF0(s32 mulFactor) {
                 break;
         }
     }
-    func_80078054(&gCurrDisplayList);
+    init_rdp_and_framebuffer(&gCurrDisplayList);
     render_borders_for_multiplayer(&gCurrDisplayList);
     func_800A8474(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, mulFactor);
     func_80077268(&gCurrDisplayList);
@@ -1272,7 +1272,7 @@ void func_8006CCF0(s32 mulFactor) {
             }
         }
     }
-    if (((buttonHeldInputs & L_TRIG) && (D_801234EC == 0)) || (D_801234FC != 0)) {
+    if (((buttonHeldInputs & L_TRIG) && (sRenderContext == DRAW_GAME)) || (D_801234FC != 0)) {
         gIsPaused = FALSE;
         D_800DD394 = 0;
         D_80123516 = 0;
@@ -1366,9 +1366,9 @@ void func_8006D8E0(s32 arg0) {
     D_80123516 = arg0 + 1;
 }
 
-void func_8006D8F0(s32 arg0) {
+void func_8006D8F0(UNUSED s32 arg0) {
     s32 temp;
-    if (D_801234EC != 4) {
+    if (sRenderContext != DRAW_UNK_04) {
         D_801234F4 = D_80121250[0];
         D_80123504 = 0;
         D_80123508 = 0x64;
@@ -1385,7 +1385,7 @@ void func_8006D8F0(s32 arg0) {
 
 void func_8006D968(s8 *arg0) {
     s32 i;
-    if (D_801234EC != 4) {
+    if (sRenderContext != DRAW_UNK_04) {
         D_80121250[0] = D_801234F4;
         for (i = 0; i < 2; i++) {
             D_80121250[i + 2] = arg0[i + 8];
@@ -1401,18 +1401,18 @@ void func_8006D968(s8 *arg0) {
     }
 }
 
-s32 func_8006DA0C(void) {
-    return D_801234EC;
+s32 get_render_context(void) {
+    return sRenderContext;
 }
 
-/* Unused? */
-void func_8006DA1C(s32 arg0) {
-    D_801234EC = arg0;
+/* Unused function used to set the render context from outside this file */
+UNUSED void set_render_context(s32 changeTo) {
+    sRenderContext = changeTo;
 }
 
 void load_menu_with_level_background(s32 menuId, s32 levelId, s32 cutsceneId) {
     func_8006ECFC(0);
-    D_801234EC = 1;
+    sRenderContext = DRAW_MENU;
     D_801234F0 = 1;
     func_80004A60(0, 0x7FFF);
     func_80004A60(1, 0x7FFF);
@@ -1483,7 +1483,7 @@ void func_8006DC58(s32 arg0) {
         func_8001BF20();
         func_80024D54(&gCurrDisplayList, &gCurrHudMat, &gCurrHudVerts, &gCurrHudTris, arg0);
         func_800C3440(arg0);
-        func_80078054(&gCurrDisplayList);
+        init_rdp_and_framebuffer(&gCurrDisplayList);
         render_borders_for_multiplayer(&gCurrDisplayList);
         func_80077268(&gCurrDisplayList);
     }
@@ -1514,7 +1514,7 @@ void func_8006DCF8(s32 mulFactor) {
         D_80123518 = func_8006B0AC(D_801234F4);
         D_80123504 = 0;
         D_80123508 = 0x64;
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         gIsPaused = FALSE;
         D_80123516 = 0;
         load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
@@ -1533,7 +1533,7 @@ void func_8006DCF8(s32 mulFactor) {
                 D_801234F4 = 0;
                 D_80123504 = 0;
                 D_80123508 = 0x64;
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
                 func_8006EC48(get_save_file_index());
                 break;
@@ -1541,7 +1541,7 @@ void func_8006DCF8(s32 mulFactor) {
                 D_80123504 = 0;
                 D_80123508 = 0x64;
                 D_801234F4 = D_80121250[0];
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 // Minor issue with these 2 if statements
                 temp2 = D_80121250[D_80121250[1] + 8];
                 temp = D_80121250[15];
@@ -1555,11 +1555,11 @@ void func_8006DCF8(s32 mulFactor) {
                 func_8006EC48(get_save_file_index());
                 break;
             case 2:
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 load_level_2(D_801234F4, D_80123500, D_80123504, D_80123518);
                 break;
             case 3:
-                D_801234EC = 0;
+                sRenderContext = DRAW_GAME;
                 D_801234F4 = D_80121250[0];
                 D_80123504 = D_80121250[15];
                 D_80123508 = D_80121250[D_80121250[1] + 8];
@@ -1583,7 +1583,7 @@ void func_8006DCF8(s32 mulFactor) {
         D_80121250[0] = D_801234F4;
         D_801234F4 = D_80121250[temp + 2];
         D_80123504 = D_80121250[temp + 4];
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         D_80123508 = D_80121250[temp + 12];
         temp = get_player_selected_vehicle(0);
         D_80123500 = gSettingsPtr->gObjectCount - 1;
@@ -1597,7 +1597,7 @@ void func_8006DCF8(s32 mulFactor) {
         gCurrDisplayList = gDisplayLists[gSPTaskNum];
         gDPFullSync(gCurrDisplayList++);
         gSPEndDisplayList(gCurrDisplayList++);
-        D_801234EC = 0;
+        sRenderContext = DRAW_GAME;
         func_8006CAE4(menuLoopResult, -1, D_80123518);
         if (gSettingsPtr->newGame && !is_in_tracks_mode()) {
             func_80000B28();
@@ -1823,7 +1823,7 @@ void func_8006EC18(s32 arg0) {
 }
 
 void func_8006EC48(s32 arg0) {
-    if (D_801234EC == 0 && !is_in_tracks_mode()) {
+    if (sRenderContext == DRAW_GAME && !is_in_tracks_mode()) {
         D_800DD37C &= -0xC01;
         D_800DD37C |= (0x40 | ((arg0 & 3) << 0xA));
     }
