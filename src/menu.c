@@ -54,13 +54,11 @@ unk801263C0 D_801263B8;
 s32 gOptionBlinkTimer;
 unk801263C0 gMenuCurrentCharacter;
 
-s32 gIgnorePlayerInputTime;  // A set amount of time to ignore player input.
-UNUSED s32 sUnused_801263C8; // Set to 0 in menu_init, and never again.
-CharacterSelectData (
-    *gCurrCharacterSelectData)[10]; // Some sort of character list? Cares if T.T. and Drumstick are unlocked
-
-s32 D_801263D0;                         // Compared for equality to gTrackIdForPreview
-s8 gActivePlayersArray[MAXCONTROLLERS]; // Boolean value for each controller if it's active with a player.
+s32 gIgnorePlayerInputTime;                          // A set amount of time to ignore player input.
+UNUSED s32 sUnused_801263C8;                         // Set to 0 in menu_init, and never again.
+CharacterSelectData (*gCurrCharacterSelectData)[10]; // Some sort of character list?
+s32 D_801263D0;                                      // Compared for equality to gTrackIdForPreview
+s8 gActivePlayersArray[MAXCONTROLLERS];              // Boolean value for each controller if it's active with a player.
 s32 gOpacityDecayTimer;
 s8 D_801263DC[MAXCONTROLLERS];
 s32 gMenuOptionCount;
