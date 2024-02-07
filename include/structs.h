@@ -945,7 +945,7 @@ typedef struct Object_Animation {
   /* 0x0C */ f32 x;
   /* 0x10 */ f32 y;
   /* 0x14 */ f32 z; 
-  /* 0x18 */ u8 *unk18; 
+  /* 0x18 */ SoundMask *unk18; 
   /* 0x1C */ struct Object *unk1C;
   /* 0x20 */ s32 unk20;
   /* 0x24 */ s16 unk24;
@@ -1006,8 +1006,8 @@ typedef struct Object_Weapon {
   /* 0x14 */ s16 unk16;
   /* 0x18 */ u8 weaponID;
   /* 0x19 */ s8 checkpoint;
-  /* 0x19 */ s16 unk1A;
-  /* 0x19 */ SoundMask *soundMask;
+  /* 0x1A */ s16 unk1A;
+  /* 0x1C */ SoundMask *soundMask;
 } Object_Weapon;
 
 typedef struct Object_Butterfly {
@@ -1018,7 +1018,7 @@ typedef struct Object_Butterfly {
   /* 0x0FD */ u8 unkFD;
   /* 0x0FE */ u8 unkFE;
   /* 0x0FF */ u8 unkFF;
-  /* 0x100 */ s32 unk100;
+  /* 0x100 */ struct Object *unk100;
   /* 0x104 */ s16 unk104;
   /* 0x106 */ s16 unk106;
   /* 0x108 */ f32 unk108;
@@ -1206,11 +1206,11 @@ typedef struct Object_Racer {
   /* 0x004 */ s32 unk4;
   /* 0x008 */ f32 forwardVel;
   /* 0x00C */ f32 animationSpeed;
-  /* 0x010 */ s32 unk10;
-  /* 0x014 */ s32 unk14;
-  /* 0x018 */ s32 unk18;
-  /* 0x01C */ s32 unk1C;
-  /* 0x020 */ s32 unk20;
+  /* 0x010 */ SoundMask *unk10;
+  /* 0x014 */ SoundMask *unk14;
+  /* 0x018 */ SoundMask *unk18;
+  /* 0x01C */ SoundMask *unk1C;
+  /* 0x020 */ SoundMask *unk20;
   /* 0x024 */ SoundMask *soundMask;
   /* 0x028 */ u16 lastSoundID;
   /* 0x02A */ u16 unk2A;
@@ -1293,7 +1293,7 @@ typedef struct Object_Racer {
   /* 0x174 */ s8 balloon_level;
   /* 0x175 */ s8 magnetTimer;
   /* 0x176 */ s16 unk176;
-  /* 0x178 */ void *magnetSoundMask;
+  /* 0x178 */ SoundMask *magnetSoundMask;
   /* 0x17C */ SoundMask *shieldSoundMask;
   /* 0x180 */ SoundMask *bananaSoundMask;
   /* 0x184 */ s8 magnetModelID;
@@ -1563,7 +1563,7 @@ typedef struct Object_Log {
 
 typedef struct Object_Fireball_Octoweapon {
     u8 pad0[0x1C];
-    s32 soundMask;
+    SoundMask *soundMask;
 } Object_Fireball_Octoweapon;
 
 typedef struct Object_AnimatedObject {

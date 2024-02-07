@@ -440,6 +440,7 @@ UNUSED void func_800AC860(void) {
     }
 }
 
+// Caled only for lens flare objects
 void func_800AC880(Object *obj) {
     if (obj == D_800E2A80) {
         D_800E2A80 = NULL;
@@ -513,6 +514,7 @@ void cameraAddOverrideObject(Object *arg0) {
     }
 }
 
+// Called only for lens flare switch objects.
 void func_800ACF98(Object *arg0) {
     s32 i;
     s32 isFound = FALSE;

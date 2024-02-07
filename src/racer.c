@@ -3674,14 +3674,14 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
         WRAP(angle, -0x8000, 0x8000);
         racer->x_rotation_vel += (angle >> 3); //!@Delta
     }
-    if (racer->unk18) {
-        func_8000488C((void *) racer->unk18);
+    if (racer->unk18 != NULL) {
+        func_8000488C((void *) (s32) racer->unk18);
     }
-    if (racer->unk10) {
-        func_8000488C((void *) racer->unk10);
+    if (racer->unk10 != NULL) {
+        func_8000488C((void *) (s32) racer->unk10);
     }
-    if (racer->unk14) {
-        func_8000488C((void *) racer->unk14);
+    if (racer->unk14 != NULL) {
+        func_8000488C((void *) (s32) racer->unk14);
     }
     if (racer->unk1FE == 1 || racer->unk1FE == 3) {
         racer->unk1E8 = racer->steerAngle;

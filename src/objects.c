@@ -30,6 +30,7 @@
 #include "audiosfx.h"
 #include "audio_vehicle.h"
 #include "vehicle_misc.h"
+#include "weather.h"
 
 #define MAX_CHECKPOINTS 60
 #define OBJECT_POOL_SIZE 0x15800
@@ -2194,7 +2195,226 @@ void gParticlePtrList_flush(void) {
     gFreeListCount = 0;
 }
 
+#ifdef NON_EQUIVALENT
+void func_800101AC(Object *arg0, s32 arg1) {
+    Object *temp_s1;
+    Object_64 *obj64;
+    Object_Weapon *weapon;
+    Object_Racer *racer;
+    Object_Fireball_Octoweapon *fireball;
+    Object_Log *log;
+    s32 i;
+    s32 j;
+    SoundMask *temp_a0_5;
+    Object_Butterfly *butterfly;
+    s32 numberOfModelIds;
+
+    if (arg0->segment.trans.flags & RENDER_UNK_0008000) {
+        func_800B2040((Particle *) arg0);
+        gParticleCount--;
+        return;
+    }
+    if (arg0->unk60 != NULL) {
+        for (i = 0; i < arg0->unk60->unk0; i++) {
+            temp_s1 = arg0->unk60[i].unk4[0];
+            numberOfModelIds = temp_s1->segment.header->numberOfModelIds;
+            if (temp_s1->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+                for (j = 0; j < numberOfModelIds; j++) {
+                    free_3d_model(temp_s1->unk68[j]);
+                }
+            } else {
+                for (j = 0; j < numberOfModelIds; j++) {
+                    free_sprite(temp_s1->unk68[j]);
+                }
+            }
+            try_free_object_header((s32) temp_s1->segment.object.unk2C);
+            free_from_memory_pool(temp_s1);
+        }
+    }
+    if (arg0->lightData != NULL) {
+        for (i = 0; i < arg0->segment.header->numLightSources; i++) {
+            func_80032BAC(arg0->lightData[i]);
+        }
+    }
+    switch (arg0->behaviorId) {
+        case BHV_RACER:
+        case BHV_ANIMATED_OBJECT_3:
+            for (i = 0; i < gObjectCount; i++) {
+                if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
+                    butterfly = &gObjPtrList[i]->unk64->butterfly;
+                    if (arg0 == butterfly->unk100) {
+                        butterfly->unk100 = 0;
+                        butterfly->unkFD = 1;
+                    }
+                }
+            }
+        default:
+            break;
+        case BHV_WEAPON:
+        case BHV_WEAPON_2:
+            weapon = &arg0->unk64->weapon;
+            if (weapon->soundMask != 0) {
+                func_800096F8(weapon->soundMask);
+                weapon->soundMask = NULL;
+                if (arg0->behaviorId == BHV_WEAPON_2) {
+                    decrease_rocket_sound_timer();
+                }
+            }
+            break;
+        case BHV_FIREBALL_OCTOWEAPON_2:
+            fireball = &arg0->unk64->fireball_octoweapon;
+            if (fireball->soundMask != 0) {
+                func_800096F8(fireball->soundMask);
+            }
+            break;
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+            // TODO: Get a Snowball struct?
+            if (arg0->unk64->racer.unk20 != 0) {
+                func_800096F8((SoundMask *) arg0->unk64->racer.unk20);
+            }
+            break;
+        case BHV_WAVE_GENERATOR:
+            func_800BF3E4(arg0);
+            break;
+        case BHV_LIGHT_RGBA:
+            func_80032BAC((ObjectLight *) arg0->unk64);
+            break;
+        case BHV_ANIMATION:
+            obj64 = arg0->unk64;
+            if ((obj64 != NULL) && (arg1 == 0)) {
+                free_object((Object *) obj64);
+            }
+            break;
+        case BHV_OVERRIDE_POS:
+            for (i = 0; i < D_8011AE00 && arg0 != D_8011ADD8[i]; i++) {}
+            if (i < D_8011AE00) {
+                D_8011AE00--;
+                for (; i < D_8011AE00; i++) {
+                    D_8011ADD8[i] = D_8011ADD8[i + 1];
+                }
+            }
+            break;
+        case BHV_BUOY_PIRATE_SHIP:
+        case BHV_LOG:
+            log = &arg0->unk64->log;
+            if (log != NULL) {
+                free_from_memory_pool(log);
+            }
+            break;
+        case BHV_LENS_FLARE:
+            func_800AC880(arg0);
+            break;
+        case BHV_LENS_FLARE_SWITCH:
+            func_800ACF98(arg0);
+            break;
+    }
+    if (arg0->behaviorId >= BHV_CHECKPOINT || arg0->behaviorId == BHV_DINO_WHALE) {
+        switch (arg0->behaviorId) {
+            case BHV_ANIMATED_OBJECT:
+            case BHV_CAMERA_ANIMATION:
+            case BHV_CAR_ANIMATION:
+            case BHV_CHARACTER_SELECT:
+            case BHV_VEHICLE_ANIMATION:
+            case BHV_HIT_TESTER:
+            case BHV_HIT_TESTER_2:
+            case BHV_PARK_WARDEN_2:
+            case BHV_ANIMATED_OBJECT_2:
+            case BHV_WIZPIG_SHIP:
+            case BHV_ANIMATED_OBJECT_3:
+            case BHV_ANIMATED_OBJECT_4:
+            case BHV_SNOWBALL:
+            case BHV_SNOWBALL_2:
+            case BHV_SNOWBALL_3:
+            case BHV_SNOWBALL_4:
+            case BHV_HIT_TESTER_3:
+            case BHV_HIT_TESTER_4:
+            case BHV_DOOR_OPENER:
+            case BHV_PIG_ROCKETEER:
+            case BHV_WIZPIG_GHOSTS:
+                // Not sure if this is an animation yet...
+                temp_a0_5 = arg0->unk64->animation.unk18;
+                if (temp_a0_5 != NULL) {
+                    func_8000488C((u8 *) temp_a0_5);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    if (arg0->behaviorId == BHV_RACER) {
+        racer = &arg0->unk64->racer;
+        if (racer->unk18 != 0) {
+            func_8000488C((u8 *) (s32) racer->unk18);
+        }
+        if (racer->unk10 != 0) {
+            func_8000488C((u8 *) (s32) racer->unk10);
+        }
+        if (racer->unk14 != 0) {
+            func_8000488C((u8 *) (s32) racer->unk14);
+        }
+        if (racer->unk1C != 0) {
+            func_8000488C((u8 *) (s32) racer->unk1C);
+        }
+        if (racer->unk20 != 0) {
+            func_8000488C((u8 *) (s32) racer->unk20);
+        }
+        if (racer->soundMask != NULL) {
+            func_800096F8(racer->soundMask);
+        }
+        if (racer->shieldSoundMask != NULL) {
+            func_800096F8(racer->shieldSoundMask);
+        }
+        if (racer->magnetSoundMask != NULL) {
+            func_8000488C((u8 *) racer->magnetSoundMask);
+        }
+        racer_sound_free(arg0);
+        for (i = 0; i < gObjectCount; i++) {
+            if ((gObjPtrList[i]->segment.trans.flags & RENDER_UNK_0008000) &&
+                (arg0->segment.level_entry == gObjPtrList[i]->segment.level_entry)) {
+                gObjPtrList[i]->segment.level_entry = NULL;
+            }
+            if (gObjPtrList[i]->behaviorId == BHV_WEAPON_2 || gObjPtrList[i]->behaviorId == BHV_FLY_COIN ||
+                gObjPtrList[i]->behaviorId == BHV_WEAPON) {
+                free_object(gObjPtrList[i]);
+            }
+        }
+    }
+    if (arg0->shadow != NULL && arg0->shadow->texture != NULL) {
+        free_texture(arg0->shadow->texture);
+    }
+    if (arg0->waterEffect != NULL && arg0->waterEffect->texture != NULL) {
+        free_texture(arg0->waterEffect->texture);
+    }
+    numberOfModelIds = arg0->segment.header->numberOfModelIds;
+    if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            if (arg0->unk68[i] != NULL) {
+                free_3d_model(arg0->unk68[i]);
+            }
+        }
+    } else if (arg0->segment.header->modelType == OBJECT_MODEL_TYPE_MISC) {
+        for (i = 0; i < numberOfModelIds; i++) {
+            free_texture(arg0->unk68[i]);
+        }
+    } else {
+        for (i = 0; i < numberOfModelIds; i++) {
+            free_sprite(arg0->unk68[i]);
+        }
+    }
+    if (arg0->segment.header->unk57 > 0) {
+        for (i = 0; i < arg0->segment.header->unk57; i++) {
+            func_800B2260((Particle *) &arg0->unk6C[i]);
+        }
+    }
+    try_free_object_header((s32) arg0->segment.object.unk2C);
+    free_from_memory_pool(arg0);
+}
+#else
 GLOBAL_ASM("asm/non_matchings/objects/func_800101AC.s")
+#endif
 
 #ifdef NON_MATCHING
 // Minor regalloc diffs
@@ -5671,7 +5891,7 @@ void func_8001EFA4(Object *arg0, Object *animObj) {
     anim->unk3C = animEntry->fadeAlpha;
     anim->unk42 = 0xFF;
     if (anim->unk18 != NULL) {
-        func_8000488C(anim->unk18);
+        func_8000488C((u8 *) anim->unk18);
     }
     anim->unk18 = 0;
     anim->unk43 = animEntry->unk30;
