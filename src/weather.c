@@ -440,7 +440,7 @@ UNUSED void func_800AC860(void) {
     }
 }
 
-// Caled only for lens flare objects
+// Called only for lens flare objects
 void func_800AC880(Object *obj) {
     if (obj == D_800E2A80) {
         D_800E2A80 = NULL;

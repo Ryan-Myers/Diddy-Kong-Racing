@@ -2221,7 +2221,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             tempObj = obj->unk60->unk4[i];
             numberOfModelIds = tempObj->segment.header->numberOfModelIds;
             if (tempObj->segment.header->modelType == OBJECT_MODEL_TYPE_3D_MODEL) {
-                if (((!gObjPtrList) && (!gObjPtrList)) && (!gObjPtrList)){}
+                if (((!gObjPtrList) && (!gObjPtrList)) && (!gObjPtrList)) {}
                 for (j = 0; j < numberOfModelIds; j++) {
                     free_3d_model(tempObj->unk68[j]);
                 }
@@ -2245,7 +2245,7 @@ void func_800101AC(Object *obj, s32 arg1) {
             for (i = 0; i < gObjectCount; i++) {
                 if (gObjPtrList[i]->behaviorId == BHV_BUTTERFLY) {
                     obj64 = gObjPtrList[i]->unk64;
-                    //butterfly = &gObjPtrList[i]->unk64->butterfly;
+                    // butterfly = &gObjPtrList[i]->unk64->butterfly;
                     if (obj == obj64->butterfly.unk100) {
                         obj64->butterfly.unk100 = 0;
                         obj64->butterfly.unkFD = 1;
@@ -2317,38 +2317,38 @@ void func_800101AC(Object *obj, s32 arg1) {
     // if (obj->behaviorId >= BHV_CHECKPOINT) {
     // }
     // else if (arg0->behaviorId == BHV_DINO_WHALE) {
-        switch (obj->behaviorId) {
-            case BHV_DINO_WHALE:
-            case BHV_ANIMATED_OBJECT:
-            case BHV_CAMERA_ANIMATION:
-            case BHV_CAR_ANIMATION:
-            case BHV_CHARACTER_SELECT:
-            case BHV_VEHICLE_ANIMATION:
-            case BHV_HIT_TESTER:
-            case BHV_HIT_TESTER_2:
-            case BHV_PARK_WARDEN_2:
-            case BHV_ANIMATED_OBJECT_2:
-            case BHV_WIZPIG_SHIP:
-            case BHV_ANIMATED_OBJECT_3:
-            case BHV_ANIMATED_OBJECT_4:
-            case BHV_SNOWBALL:
-            case BHV_SNOWBALL_2:
-            case BHV_SNOWBALL_3:
-            case BHV_SNOWBALL_4:
-            case BHV_HIT_TESTER_3:
-            case BHV_HIT_TESTER_4:
-            case BHV_DOOR_OPENER:
-            case BHV_PIG_ROCKETEER:
-            case BHV_WIZPIG_GHOSTS:
-                // Not sure if this is an animation yet...
-                soundMask = obj->unk64->animation.unk18;
-                if (soundMask != NULL) {
-                    func_8000488C((u8 *) soundMask);
-                }
-                break;
-            default:
-                break;
-        }
+    switch (obj->behaviorId) {
+        case BHV_DINO_WHALE:
+        case BHV_ANIMATED_OBJECT:
+        case BHV_CAMERA_ANIMATION:
+        case BHV_CAR_ANIMATION:
+        case BHV_CHARACTER_SELECT:
+        case BHV_VEHICLE_ANIMATION:
+        case BHV_HIT_TESTER:
+        case BHV_HIT_TESTER_2:
+        case BHV_PARK_WARDEN_2:
+        case BHV_ANIMATED_OBJECT_2:
+        case BHV_WIZPIG_SHIP:
+        case BHV_ANIMATED_OBJECT_3:
+        case BHV_ANIMATED_OBJECT_4:
+        case BHV_SNOWBALL:
+        case BHV_SNOWBALL_2:
+        case BHV_SNOWBALL_3:
+        case BHV_SNOWBALL_4:
+        case BHV_HIT_TESTER_3:
+        case BHV_HIT_TESTER_4:
+        case BHV_DOOR_OPENER:
+        case BHV_PIG_ROCKETEER:
+        case BHV_WIZPIG_GHOSTS:
+            // Not sure if this is an animation yet...
+            soundMask = obj->unk64->animation.unk18;
+            if (soundMask != NULL) {
+                func_8000488C((u8 *) soundMask);
+            }
+            break;
+        default:
+            break;
+    }
     // }
     if (obj->behaviorId == BHV_RACER) {
         racer = &obj->unk64->racer;

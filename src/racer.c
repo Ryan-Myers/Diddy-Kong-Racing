@@ -170,7 +170,7 @@ s16 D_8011D5AC; // Previous MapId?
 s8 gRacerWaveCount;
 s8 D_8011D5AF;
 WaterProperties **gRacerCurrentWave;
-s32 D_8011D5B4;
+s8 D_8011D5B4[4];
 s16 D_8011D5B8;
 
 /******************************/
@@ -659,7 +659,348 @@ s32 roll_percent_chance(s32 chance) {
     return get_random_number_from_range(0, 99) < chance;
 }
 
+#ifdef NON_MATCHING
+// Handles the opponent A.I. for battle & banana challenges.
+void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
+    Object *sp74;
+    Object_64 *tempRacer;
+    LevelObjectEntry *sp6C;
+    s32 var_v1;
+    f32 xDiff; // sp64
+    f32 zDiff; // sp60
+    f32 dist;  // sp5C
+    s32 temp;  // sp58
+    s32 someBool;
+    s16 i;     // sp52
+    s16 index; // sp50
+    s16 sp4E;
+    s16 sp4C;
+    s16 sp4A;
+    s16 sp48;
+    s16 sp46;
+    LevelHeader *levelHeader;
+    s8 sp3F;
+    s8 *sp38;
+    Object *tempRacerObj;
+
+    if ((!tempRacerObj->unk64) && (!tempRacerObj->unk64)){} // Fake
+    gCurrentButtonsPressed = 0;
+    gCurrentButtonsReleased = 0;
+    gCurrentRacerInput = 0;
+    gCurrentStickX = 0;
+    gCurrentStickY = 0;
+    get_racer_objects(&temp); // temp = Number of racers
+    if (temp == 4) {
+        levelHeader = get_current_level_header();
+        sp3F = levelHeader->race_type;
+        sp38 = levelHeader->unk2A;
+        if (aiRacer->unk1CD == 0) {
+            temp = func_8001C524(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
+                                 aiRacerObj->segment.trans.z_position, 0);
+            if (temp != 0xFF) {
+                aiRacer->unk154 = func_8001D214(temp);
+                aiRacer->unk1CD = 1;
+                aiRacer->unk1CE = 0xFF;
+            }
+        }
+        sp74 = aiRacer->unk154;
+        if (sp74 != NULL) {
+            sp6C = sp74->segment.level_entry;
+            xDiff = sp74->segment.trans.x_position - aiRacerObj->segment.trans.x_position;
+            zDiff = sp74->segment.trans.z_position - aiRacerObj->segment.trans.z_position;
+            dist = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+            if (dist > 0.0) {
+                temp = ((arctan2_f(xDiff, zDiff)) - 0x8000) & 0xFFFF;
+                var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
+                if (var_v1 > 0x8000) {
+                    var_v1 -= 0xFFFF;
+                }
+                if (var_v1 < -0x8000) {
+                    var_v1 += 0xFFFF;
+                }
+                gCurrentStickX = -var_v1 >> 4;
+            }
+        }
+        if (gRaceStartTimer != 0) {
+            aiRacer->unk1C6 = 0;
+        }
+        if ((aiRacer->unk1CD == 2) || (aiRacer->unk1CD == 4) || (aiRacer->unk1CD == 5)) {
+            if (aiRacer->unk1C6 > 0) {
+                aiRacer->unk1C6 -= updateRate;
+            } else {
+                aiRacer->unk1C6 = 0;
+            }
+        }
+        aiRacer->unk212 = func_8001C418(aiRacerObj->segment.trans.y_position);
+        switch (aiRacer->unk1CD) {
+            case 1:
+                get_random_number_from_range(0, 9);
+                if (aiRacer->balloon_quantity == 0) {
+                    if (roll_percent_chance(sp38[3]) != 0) {
+                        aiRacer->unk1CD = 3;
+                    } else if ((roll_percent_chance(sp38[6]) != 0) && (sp3F == RACETYPE_CHALLENGE_BANANAS) &&
+                               (aiRacer->bananas >= 2)) {
+                        aiRacer->unk1CD = 7;
+                    } else if ((roll_percent_chance(sp38[5]) != 0) && (D_8011D58C[aiRacer->unk2] != 0)) {
+                        aiRacer->unk1C6 = 0x4B0;
+                        aiRacer->eggHudCounter = D_8011D58C[aiRacer->unk2] - 1;
+                        aiRacer->unk1CD = 5;
+                    } else {
+                        aiRacer->unk1CD = 2;
+                        aiRacer->unk1C6 = 0x12C;
+                    }
+                } else if ((roll_percent_chance(sp38[6]) != 0) && (sp3F == RACETYPE_CHALLENGE_BANANAS) &&
+                           (aiRacer->bananas >= 2)) {
+                    aiRacer->unk1CD = 7;
+                } else if (roll_percent_chance(sp38[0]) != 0) {
+                    if (roll_percent_chance(50) != 0) {
+                        sp4C = 1;
+                    } else {
+                        sp4C = 0;
+                    }
+                    if (roll_percent_chance(sp38[1]) != 0) {
+                        sp46 = 0;
+                    } else {
+                        sp46 = 1;
+                    }
+                    sp4A = -1;
+                    sp48 = sp46 << 4;
+                    for (i = 0; i < 4; i++) {
+                        if (sp4C != 0) {
+                            index = 3 - i;
+                        } else {
+                            index = i;
+                        }
+                        if ((D_8011D58C[index] == 0) && (index != aiRacer->unk2)) {
+                            tempRacerObj = get_racer_object(index);
+                            tempRacer = tempRacerObj->unk64;
+                            if (sp46 == 0) {
+                                if (sp48 < tempRacer->racer.bananas) {
+                                    if (tempRacerObj->segment.trans.y_position){ } // Fake
+                                    sp48 = tempRacer->racer.bananas;
+                                    sp4A = index;
+                                }
+                            } else if ((tempRacer->racer.bananas > 0) && (tempRacer->racer.bananas < sp48)) {
+                                sp48 = tempRacer->racer.bananas;
+                                sp4A = index;
+                            }
+                        }
+                    }
+                    if (roll_percent_chance(sp38[2]) != 0) {
+                        if (get_viewport_count() == 0) {
+                            tempRacerObj = get_racer_object(index);
+                            tempRacer = tempRacerObj->unk64;
+                            if (tempRacer->racer.bananas > 0) {
+                                sp4A = 0;
+                            }
+                        }
+                    }
+                    if (sp4A >= 0) {
+                        aiRacer->eggHudCounter = (s8) sp4A;
+                        D_8011D58C[sp4A] = aiRacer->unk2 + 1;
+                        aiRacer->unk1CD = 4;
+                        aiRacer->unk1C6 = 0x4B0;
+                    } else {
+                        aiRacer->unk1CD = 2;
+                        aiRacer->unk1C6 = 0x4B0;
+                    }
+                } else {
+                    aiRacer->unk1CD = 2;
+                    aiRacer->unk1C6 = 0x12C;
+                }
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 7:
+                switch (aiRacer->unk1CD) {
+                    case 2:
+                        if (aiRacer->unk1C6 == 0) {
+                            aiRacer->unk1CD = 1;
+                        }
+                        break;
+                    case 3:
+                        if (aiRacer->balloon_type != 0) {
+                            aiRacer->unk1CD = 2;
+                            aiRacer->unk1C6 = 0xB4;
+                        }
+                        break;
+                    case 4:
+                        if ((aiRacer->balloon_quantity == 0) || (aiRacer->unk1C6 == 0)) {
+                            aiRacer->unk1CD = 1;
+                            D_8011D58C[aiRacer->eggHudCounter] = 0;
+                        }
+                        break;
+                    case 5:
+                        if ((D_8011D58C[aiRacer->unk2] == 0) || (aiRacer->unk1C6 == 0)) {
+                            aiRacer->unk1CD = 1;
+                        }
+                        break;
+                    case 7:
+                        if (aiRacer->bananas == 0) {
+                            aiRacer->unk1CD = 1;
+                        }
+                        break;
+                }
+                if (aiRacer->unk1CE != 0xFF) {
+                    sp4E = aiRacer->unk212;
+                    tempRacerObj =
+                        func_8001D214(aiRacer->unk1CE); // I'm assuming this is a Ai Node (Take with a grain of salt!)
+                    sp3F = tempRacerObj->segment.level_entry->aiNode.unkE;
+                    someBool = FALSE;
+                    if (sp6C->aiNode.unkE < sp3F) {
+                        if ((sp3F < sp4E) || (sp4E < sp6C->aiNode.unkE)) {
+                            someBool = TRUE;
+                        }
+                    } else {
+                        if (!(&sp74->segment)){ } // Fake
+                        if ((sp6C->aiNode.unkE < sp4E) || (sp4E < sp3F)) {
+                            someBool = TRUE;
+                        }
+                    }
+                    if (someBool) {
+                        if (aiRacer->unk1CD == 4) {
+                            D_8011D58C[aiRacer->eggHudCounter] = 0;
+                        }
+                        aiRacer->unk1CD = 6;
+                    }
+                }
+                if ((gCurrentStickX > -30) && (gCurrentStickX < 30)) {
+                    if (aiRacer->velocity > -10.0) {
+                        gCurrentRacerInput = A_BUTTON;
+                    }
+                } else {
+                    if (aiRacer->velocity > -4.0) {
+                        gCurrentRacerInput = (A_BUTTON | B_BUTTON);
+                    } else {
+                        gCurrentRacerInput = B_BUTTON;
+                    }
+                    if (aiRacer->velocity > -1.0) {
+                        gCurrentRacerInput = A_BUTTON;
+                    }
+                }
+                if (aiRacer->unk158 != NULL) {
+                    xDiff = aiRacer->unk158->segment.trans.x_position - sp74->segment.trans.x_position;
+                    zDiff = aiRacer->unk158->segment.trans.z_position - sp74->segment.trans.z_position;
+                    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) > 0.0) {
+                        temp = (arctan2_f(xDiff, zDiff) - 0x8000) & 0xFFFF;
+                        var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
+                        if (var_v1 > 0x8000) {
+                            var_v1 -= 0xFFFF;
+                        }
+                        if (var_v1 < -0x8000) {
+                            var_v1 += 0xFFFF;
+                        }
+                        if ((var_v1 > 0x1500) || (var_v1 < -0x1500)) {
+                            if (aiRacer->velocity > -4.0) {
+                                gCurrentRacerInput = (A_BUTTON | B_BUTTON);
+                            } else {
+                                gCurrentRacerInput = B_BUTTON;
+                            }
+                        }
+                    }
+                }
+                if (dist < 300.0) {
+                    if (aiRacer->unk158 == NULL) {
+                        switch (aiRacer->unk1CD) {
+                            case 3:
+                                temp = func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->unk2);
+                                break;
+                            case 4:
+                                tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
+                                tempRacer = tempRacerObj->unk64;
+                                if (tempRacerObj->unk64->racer.playerIndex == -1) {
+                                    temp = func_8001CD28(
+                                        sp6C->animation.x_rotation,
+                                        tempRacer->racer.unk154->segment.level_entry->animation.x_rotation | 0x100,
+                                        aiRacer->unk1CE, aiRacer->unk2);
+                                } else {
+                                    temp = func_8001C524(tempRacerObj->segment.trans.x_position,
+                                                         tempRacerObj->segment.trans.y_position,
+                                                         tempRacerObj->segment.trans.z_position, 0);
+                                    temp = func_8001CD28(sp6C->animation.x_rotation, temp | 0x100, aiRacer->unk1CE,
+                                                         aiRacer->unk2);
+                                }
+                                break;
+                            case 5:
+                                temp = func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->unk2);
+                                break;
+                            case 7:
+                                temp = func_8001CD28(sp6C->animation.x_rotation, aiRacer->unk2 + 4, aiRacer->unk1CE,
+                                                     aiRacer->unk2);
+                                break;
+                            default:
+                                temp = func_8001CC48(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->unk2 & 0xFFFFFFFFFFFFFFFFu); // Fake
+                                break;
+                        }
+
+                        if (temp != 0xFF) {
+                            aiRacer->unk158 = func_8001D214(temp);
+                        } else {
+                            if (aiRacer->unk1CE != 0xFF) {
+                                aiRacer->unk158 = func_8001D214(aiRacer->unk1CE);
+                            } else {
+                                aiRacer->unk158 = NULL;
+                            }
+                        }
+                    }
+                }
+                if (dist < 50.0 || (dist > 320.0 && aiRacer->unk158 != NULL)) {
+                    aiRacer->unk1CE = sp6C->animation.x_rotation;
+                    aiRacer->unk154 = aiRacer->unk158;
+                    if (aiRacer->unk158 == NULL) {
+                        aiRacer->unk1CD = 0;
+                    }
+                    aiRacer->unk158 = NULL;
+                }
+                break;
+            case 6:
+                temp = func_8001C524(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
+                                     aiRacerObj->segment.trans.z_position, 2);
+                if (temp != 0xFF) {
+                    aiRacer->unk154 = func_8001D214(temp);
+                    aiRacer->unk1CD = 1;
+                    aiRacer->unk1CE = 0xFF;
+                }
+                aiRacer->unk1C9 = 1;
+                break;
+        }
+        for (i = 0; i < 4; i++) {
+            if (i != aiRacer->unk2) {
+                tempRacerObj = get_racer_object(i);
+                if (tempRacerObj->unk64->racer.playerIndex != -1) {
+                    D_8011D5B4[i] = tempRacerObj->unk64->racer.unk212;
+                }
+                if (D_8011D5B4[aiRacer->unk2] == D_8011D5B4[i]) {
+                    xDiff = aiRacerObj->segment.trans.x_position - tempRacerObj->segment.trans.x_position;
+                    zDiff = aiRacerObj->segment.trans.z_position - tempRacerObj->segment.trans.z_position;
+                    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 800.0) {
+                        temp = arctan2_f(xDiff, zDiff);
+                        temp -= (aiRacerObj->segment.trans.y_rotation & 0xFFFF);
+                        if (temp > 0x8000) {
+                            temp = -0xFFFF;
+                        }
+                        if (temp < -0x8000) {
+                            temp = 0xFFFF;
+                        }
+                        if (aiRacer->balloon_level == 1) {
+                            var_v1 = 0x1000;
+                        } else {
+                            var_v1 = 0x800;
+                        }
+                        if ((-var_v1 < temp) && (temp < var_v1)) {
+                            gCurrentButtonsReleased |= Z_TRIG;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+#else
 GLOBAL_ASM("asm/non_matchings/racer/func_8004447C.s")
+#endif
 
 void func_80045128(Object **racerObjs) {
     Object_Racer *obj;
