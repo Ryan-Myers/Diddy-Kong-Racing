@@ -431,11 +431,8 @@ typedef struct LevelHeader {
   /* 0x0C */ u8 unkC[10];
   /* 0x16 */ u8 unk16[10];
   /* 0x20 */ s8 *AILevelTable;
-
   /* 0x24 */ u8 pad24[6];
-  /* 0x2A */ u8 unk2A;
-  /* 0x2B */ u8 pad2B[9];
-
+  /* 0x2A */ s8 unk2A[10];
   /* 0x34 */ s16 geometry;
   /* 0x36 */ s16 collectables; // Objects such as bananas, balloons, etc.
   /* 0x38 */ s16 skybox;
