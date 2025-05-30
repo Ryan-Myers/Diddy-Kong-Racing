@@ -738,7 +738,7 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     aiRacer->elevation = obj_elevation(aiRacerObj->segment.trans.y_position);
     switch (aiRacer->unk1CD) {
         case 1:
-            get_random_number_from_range(0, 9);
+            rand_range(0, 9);
             if (aiRacer->balloon_quantity == 0) {
                 if (roll_percent_chance(sp38[3]) != 0) {
                     aiRacer->unk1CD = 3;
@@ -1046,7 +1046,8 @@ void func_80045128(Object **racerObjs) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s") // https://decomp.me/scratch/HSAE4
+// https://decomp.me/scratch/HSAE4
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s")
 
 #ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
@@ -2229,7 +2230,8 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s") // https://decomp.me/scratch/ZIUaE
+// https://decomp.me/scratch/ZIUaE
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 
 /**
  * When turning left and right in a plane, apply the tilting animation to the character.
@@ -2530,7 +2532,8 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s") // https://decomp.me/scratch/yfGqf
+// https://decomp.me/scratch/yfGqf
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s")
 
 /**
  * Handles the camera movement when the player is on a loop-the-loop.

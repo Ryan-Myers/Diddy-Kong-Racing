@@ -3953,7 +3953,8 @@ void func_8002F2AC(void) {
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F2AC.s")
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F440.s") // https://decomp.me/scratch/DP2Yj
+// https://decomp.me/scratch/DP2Yj
+#pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002F440.s")
 
 // Transition points between different lighting levels, used by certain objects
 f32 func_8002FA64(void) {
