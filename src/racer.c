@@ -677,346 +677,349 @@ void func_8004447C(Object *aiRacerObj, Object_Racer *aiRacer, s32 updateRate) {
     s16 sp48;
     s16 sp46;
     LevelHeader *levelHeader;
-    s8 sp3F;
+    s8 raceType;
     s8 *sp38;
     Object *tempRacerObj;
 
 #ifdef FAKEMATCH
     if ((!tempRacerObj->unk64) && (!tempRacerObj->unk64)) {} // Fake
 #endif
+
     gCurrentButtonsPressed = 0;
     gCurrentButtonsReleased = 0;
     gCurrentRacerInput = 0;
     gCurrentStickX = 0;
     gCurrentStickY = 0;
     get_racer_objects(&temp); // temp = Number of racers
-    if (temp == 4) {
-        levelHeader = get_current_level_header();
-        sp3F = levelHeader->race_type;
-        sp38 = levelHeader->unk2A;
-        if (aiRacer->unk1CD == 0) {
+    if (temp != 4) {
+        return;
+    }
+
+    levelHeader = get_current_level_header();
+    raceType = levelHeader->race_type;
+    sp38 = levelHeader->unk2A;
+    if (aiRacer->unk1CD == 0) {
+        temp = ainode_find_nearest(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
+                                    aiRacerObj->segment.trans.z_position, 0);
+        if (temp != 0xFF) {
+            aiRacer->unk154 = ainode_get(temp);
+            aiRacer->unk1CD = 1;
+            aiRacer->unk1CE = 0xFF;
+        }
+    }
+    sp74 = aiRacer->unk154;
+    if (sp74 != NULL) {
+        sp6C = sp74->segment.level_entry;
+        xDiff = sp74->segment.trans.x_position - aiRacerObj->segment.trans.x_position;
+        zDiff = sp74->segment.trans.z_position - aiRacerObj->segment.trans.z_position;
+        dist = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
+        if (dist > 0.0) {
+            temp = ((arctan2_f(xDiff, zDiff)) - 0x8000) & 0xFFFF;
+            var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
+            if (var_v1 > 0x8000) {
+                var_v1 -= 0xFFFF;
+            }
+            if (var_v1 < -0x8000) {
+                var_v1 += 0xFFFF;
+            }
+            gCurrentStickX = -var_v1 >> 4;
+        }
+    }
+    if (gRaceStartTimer != 0) {
+        aiRacer->unk1C6 = 0;
+    }
+    if ((aiRacer->unk1CD == 2) || (aiRacer->unk1CD == 4) || (aiRacer->unk1CD == 5)) {
+        if (aiRacer->unk1C6 > 0) {
+            aiRacer->unk1C6 -= updateRate;
+        } else {
+            aiRacer->unk1C6 = 0;
+        }
+    }
+    aiRacer->elevation = obj_elevation(aiRacerObj->segment.trans.y_position);
+    switch (aiRacer->unk1CD) {
+        case 1:
+            get_random_number_from_range(0, 9);
+            if (aiRacer->balloon_quantity == 0) {
+                if (roll_percent_chance(sp38[3]) != 0) {
+                    aiRacer->unk1CD = 3;
+                } else if ((roll_percent_chance(sp38[6]) != 0) && (raceType == RACETYPE_CHALLENGE_BANANAS) &&
+                            (aiRacer->bananas >= 2)) {
+                    aiRacer->unk1CD = 7;
+                } else if ((roll_percent_chance(sp38[5]) != 0) && (D_8011D58C[aiRacer->racerIndex] != 0)) {
+                    aiRacer->unk1C6 = 1200;
+                    aiRacer->eggHudCounter = D_8011D58C[aiRacer->racerIndex] - 1;
+                    aiRacer->unk1CD = 5;
+                } else {
+                    aiRacer->unk1CD = 2;
+                    aiRacer->unk1C6 = 300;
+                }
+            } else if ((roll_percent_chance(sp38[6]) != 0) && (raceType == RACETYPE_CHALLENGE_BANANAS) &&
+                        (aiRacer->bananas >= 2)) {
+                aiRacer->unk1CD = 7;
+            } else if (roll_percent_chance(sp38[0]) != 0) {
+                if (roll_percent_chance(50) != 0) {
+                    sp4C = 1;
+                } else {
+                    sp4C = 0;
+                }
+                if (roll_percent_chance(sp38[1]) != 0) {
+                    sp46 = 0;
+                } else {
+                    sp46 = 1;
+                }
+                sp4A = -1;
+                sp48 = sp46 << 4;
+                for (i = 0; i < 4; i++) {
+                    if (sp4C != 0) {
+                        index = 3 - i;
+                    } else {
+                        index = i;
+                    }
+                    if ((D_8011D58C[index] == 0) && (index != aiRacer->racerIndex)) {
+                        tempRacerObj = get_racer_object(index);
+                        tempRacer = tempRacerObj->unk64;
+                        if (sp46 == 0) {
+                            if (sp48 < tempRacer->racer.bananas) {
+#ifdef FAKEMATCH
+                                if (tempRacerObj->segment.trans.y_position) {} // Fake
+#endif
+                                sp48 = tempRacer->racer.bananas;
+                                sp4A = index;
+                            }
+                        } else {
+                            if ((tempRacer->racer.bananas > 0) && (tempRacer->racer.bananas < sp48)) {
+                                sp48 = tempRacer->racer.bananas;
+                                sp4A = index;
+                            }
+                        }
+                    }
+                }
+                if (roll_percent_chance(sp38[2]) != 0) {
+                    if (cam_get_viewport_layout() == 0) {
+                        tempRacerObj = get_racer_object(index);
+                        tempRacer = tempRacerObj->unk64;
+                        if (tempRacer->racer.bananas > 0) {
+                            sp4A = 0;
+                        }
+                    }
+                }
+                if (sp4A >= 0) {
+                    aiRacer->eggHudCounter = (s8) sp4A;
+                    D_8011D58C[sp4A] = aiRacer->racerIndex + 1;
+                    aiRacer->unk1CD = 4;
+                    aiRacer->unk1C6 = 0x4B0;
+                } else {
+                    aiRacer->unk1CD = 2;
+                    aiRacer->unk1C6 = 0x4B0;
+                }
+            } else {
+                aiRacer->unk1CD = 2;
+                aiRacer->unk1C6 = 0x12C;
+            }
+            break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 7:
+            switch (aiRacer->unk1CD) {
+                case 2:
+                    if (aiRacer->unk1C6 == 0) {
+                        aiRacer->unk1CD = 1;
+                    }
+                    break;
+                case 3:
+                    if (aiRacer->balloon_type != 0) {
+                        aiRacer->unk1CD = 2;
+                        aiRacer->unk1C6 = 180;
+                    }
+                    break;
+                case 4:
+                    if ((aiRacer->balloon_quantity == 0) || (aiRacer->unk1C6 == 0)) {
+                        aiRacer->unk1CD = 1;
+                        D_8011D58C[aiRacer->eggHudCounter] = 0;
+                    }
+                    break;
+                case 5:
+                    if ((D_8011D58C[aiRacer->racerIndex] == 0) || (aiRacer->unk1C6 == 0)) {
+                        aiRacer->unk1CD = 1;
+                    }
+                    break;
+                case 7:
+                    if (aiRacer->bananas == 0) {
+                        aiRacer->unk1CD = 1;
+                    }
+                    break;
+            }
+            if (aiRacer->unk1CE != 0xFF) {
+                sp4E = aiRacer->elevation;
+                tempRacerObj =
+                    ainode_get(aiRacer->unk1CE); // I'm assuming this is a Ai Node (Take with a grain of salt!)
+                raceType = tempRacerObj->segment.level_entry->aiNode.elevation;
+                someBool = FALSE;
+                if (sp6C->aiNode.elevation < raceType) {
+                    if ((raceType < sp4E) || (sp4E < sp6C->aiNode.elevation)) {
+                        someBool = TRUE;
+                    }
+                } else {
+#ifdef FAKEMATCH
+                    if (!(&sp74->segment)) {} // Fake
+#endif
+                    if ((sp6C->aiNode.elevation < sp4E) || (sp4E < raceType)) {
+                        someBool = TRUE;
+                    }
+                }
+                if (someBool) {
+                    if (aiRacer->unk1CD == 4) {
+                        D_8011D58C[aiRacer->eggHudCounter] = 0;
+                    }
+                    aiRacer->unk1CD = 6;
+                }
+            }
+            if ((gCurrentStickX > -30) && (gCurrentStickX < 30)) {
+                if (aiRacer->velocity > -10.0) {
+                    gCurrentRacerInput = A_BUTTON;
+                }
+            } else {
+                if (aiRacer->velocity > -4.0) {
+                    gCurrentRacerInput = (A_BUTTON | B_BUTTON);
+                } else {
+                    gCurrentRacerInput = B_BUTTON;
+                }
+                if (aiRacer->velocity > -1.0) {
+                    gCurrentRacerInput = A_BUTTON;
+                }
+            }
+            if (aiRacer->nodeCurrent != NULL) {
+                xDiff = aiRacer->nodeCurrent->segment.trans.x_position - sp74->segment.trans.x_position;
+                zDiff = aiRacer->nodeCurrent->segment.trans.z_position - sp74->segment.trans.z_position;
+                if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) > 0.0) {
+                    temp = (arctan2_f(xDiff, zDiff) - 0x8000) & 0xFFFF;
+                    var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
+                    if (var_v1 > 0x8000) {
+                        var_v1 -= 0xFFFF;
+                    }
+                    if (var_v1 < -0x8000) {
+                        var_v1 += 0xFFFF;
+                    }
+                    if ((var_v1 > 0x1500) || (var_v1 < -0x1500)) {
+                        if (aiRacer->velocity > -4.0) {
+                            gCurrentRacerInput = (A_BUTTON | B_BUTTON);
+                        } else {
+                            gCurrentRacerInput = B_BUTTON;
+                        }
+                    }
+                }
+            }
+            if (dist < 300.0) {
+                if (aiRacer->nodeCurrent == NULL) {
+                    switch (aiRacer->unk1CD) {
+                        case 3:
+                            temp =
+                                func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
+                            break;
+                        case 4:
+                            tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
+                            tempRacer = tempRacerObj->unk64;
+#ifdef FAKEMATCH
+                            if (tempRacerObj->unk64->racer.playerIndex == -1) {
+#else
+                            if (tempRacer->racer.playerIndex == -1) {
+#endif
+                                temp = func_8001CD28(
+                                    sp6C->animation.x_rotation,
+                                    tempRacer->racer.unk154->segment.level_entry->animation.x_rotation | 0x100,
+                                    aiRacer->unk1CE, aiRacer->racerIndex);
+                            } else {
+                                temp = ainode_find_nearest(tempRacerObj->segment.trans.x_position,
+                                                            tempRacerObj->segment.trans.y_position,
+                                                            tempRacerObj->segment.trans.z_position, 0);
+                                temp = func_8001CD28(sp6C->animation.x_rotation, temp | 0x100, aiRacer->unk1CE,
+                                                        aiRacer->racerIndex);
+                            }
+                            break;
+                        case 5:
+                            temp =
+                                func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
+                            break;
+                        case 7:
+                            temp = func_8001CD28(sp6C->animation.x_rotation, aiRacer->racerIndex + 4,
+                                                    aiRacer->unk1CE, aiRacer->racerIndex);
+                            break;
+                        default:
+#ifdef FAKEMATCH
+                            temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE,
+                                                    aiRacer->racerIndex & 0xFFFFFFFFFFFFFFFFu); // Fake
+#else
+                            temp =
+                                ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->racerIndex);
+#endif
+                            break;
+                    }
+
+                    if (temp != 0xFF) {
+                        aiRacer->nodeCurrent = ainode_get(temp);
+                    } else {
+                        if (aiRacer->unk1CE != 0xFF) {
+                            aiRacer->nodeCurrent = ainode_get(aiRacer->unk1CE);
+                        } else {
+                            aiRacer->nodeCurrent = NULL;
+                        }
+                    }
+                }
+            }
+            if (dist < 50.0 || (dist > 320.0 && aiRacer->nodeCurrent != NULL)) {
+                aiRacer->unk1CE = sp6C->animation.x_rotation;
+                aiRacer->unk154 = aiRacer->nodeCurrent;
+                if (aiRacer->nodeCurrent == NULL) {
+                    aiRacer->unk1CD = 0;
+                }
+                aiRacer->nodeCurrent = NULL;
+            }
+            break;
+        case 6:
             temp = ainode_find_nearest(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
-                                       aiRacerObj->segment.trans.z_position, 0);
+                                        aiRacerObj->segment.trans.z_position, 2);
             if (temp != 0xFF) {
                 aiRacer->unk154 = ainode_get(temp);
                 aiRacer->unk1CD = 1;
                 aiRacer->unk1CE = 0xFF;
             }
-        }
-        sp74 = aiRacer->unk154;
-        if (sp74 != NULL) {
-            sp6C = sp74->segment.level_entry;
-            xDiff = sp74->segment.trans.x_position - aiRacerObj->segment.trans.x_position;
-            zDiff = sp74->segment.trans.z_position - aiRacerObj->segment.trans.z_position;
-            dist = sqrtf((xDiff * xDiff) + (zDiff * zDiff));
-            if (dist > 0.0) {
-                temp = ((arctan2_f(xDiff, zDiff)) - 0x8000) & 0xFFFF;
-                var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
-                if (var_v1 > 0x8000) {
-                    var_v1 -= 0xFFFF;
-                }
-                if (var_v1 < -0x8000) {
-                    var_v1 += 0xFFFF;
-                }
-                gCurrentStickX = -var_v1 >> 4;
+            aiRacer->unk1C9 = 1;
+            break;
+    }
+    for (i = 0; i < 4; i++) {
+        if (i != aiRacer->racerIndex) {
+            tempRacerObj = get_racer_object(i);
+#ifdef FAKEMATCH
+            if (tempRacerObj->unk64->racer.playerIndex != -1) {
+                D_8011D5B4[i] = tempRacerObj->unk64->racer.elevation;
             }
-        }
-        if (gRaceStartTimer != 0) {
-            aiRacer->unk1C6 = 0;
-        }
-        if ((aiRacer->unk1CD == 2) || (aiRacer->unk1CD == 4) || (aiRacer->unk1CD == 5)) {
-            if (aiRacer->unk1C6 > 0) {
-                aiRacer->unk1C6 -= updateRate;
-            } else {
-                aiRacer->unk1C6 = 0;
+#else
+            tempRacer = tempRacerObj->unk64;
+            if (tempRacer->racer.playerIndex != -1) {
+                D_8011D5B4[i] = tempRacer->racer.elevation;
             }
-        }
-        aiRacer->elevation = obj_elevation(aiRacerObj->segment.trans.y_position);
-        switch (aiRacer->unk1CD) {
-            case 1:
-                get_random_number_from_range(0, 9);
-                if (aiRacer->balloon_quantity == 0) {
-                    if (roll_percent_chance(sp38[3]) != 0) {
-                        aiRacer->unk1CD = 3;
-                    } else if ((roll_percent_chance(sp38[6]) != 0) && (sp3F == RACETYPE_CHALLENGE_BANANAS) &&
-                               (aiRacer->bananas >= 2)) {
-                        aiRacer->unk1CD = 7;
-                    } else if ((roll_percent_chance(sp38[5]) != 0) && (D_8011D58C[aiRacer->racerIndex] != 0)) {
-                        aiRacer->unk1C6 = 0x4B0;
-                        aiRacer->eggHudCounter = D_8011D58C[aiRacer->racerIndex] - 1;
-                        aiRacer->unk1CD = 5;
-                    } else {
-                        aiRacer->unk1CD = 2;
-                        aiRacer->unk1C6 = 0x12C;
-                    }
-                } else if ((roll_percent_chance(sp38[6]) != 0) && (sp3F == RACETYPE_CHALLENGE_BANANAS) &&
-                           (aiRacer->bananas >= 2)) {
-                    aiRacer->unk1CD = 7;
-                } else if (roll_percent_chance(sp38[0]) != 0) {
-                    if (roll_percent_chance(50) != 0) {
-                        sp4C = 1;
-                    } else {
-                        sp4C = 0;
-                    }
-                    if (roll_percent_chance(sp38[1]) != 0) {
-                        sp46 = 0;
-                    } else {
-                        sp46 = 1;
-                    }
-                    sp4A = -1;
-                    sp48 = sp46 << 4;
-                    for (i = 0; i < 4; i++) {
-                        if (sp4C != 0) {
-                            index = 3 - i;
-                        } else {
-                            index = i;
-                        }
-                        if ((D_8011D58C[index] == 0) && (index != aiRacer->racerIndex)) {
-                            tempRacerObj = get_racer_object(index);
-                            tempRacer = tempRacerObj->unk64;
-                            if (sp46 == 0) {
-                                if (sp48 < tempRacer->racer.bananas) {
-#ifdef FAKEMATCH
-                                    if (tempRacerObj->segment.trans.y_position) {} // Fake
 #endif
-                                    sp48 = tempRacer->racer.bananas;
-                                    sp4A = index;
-                                }
-                            } else {
-                                if ((tempRacer->racer.bananas > 0) && (tempRacer->racer.bananas < sp48)) {
-                                    sp48 = tempRacer->racer.bananas;
-                                    sp4A = index;
-                                }
-                            }
-                        }
+            if (D_8011D5B4[aiRacer->racerIndex] == D_8011D5B4[i]) {
+                xDiff = aiRacerObj->segment.trans.x_position - tempRacerObj->segment.trans.x_position;
+                zDiff = aiRacerObj->segment.trans.z_position - tempRacerObj->segment.trans.z_position;
+                if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 800.0) {
+                    temp = arctan2_f(xDiff, zDiff);
+                    temp -= (aiRacerObj->segment.trans.rotation.y_rotation & 0xFFFF);
+                    if (temp > 0x8000) {
+                        temp = -0xFFFF;
                     }
-                    if (roll_percent_chance(sp38[2]) != 0) {
-                        if (cam_get_viewport_layout() == 0) {
-                            tempRacerObj = get_racer_object(index);
-                            tempRacer = tempRacerObj->unk64;
-                            if (tempRacer->racer.bananas > 0) {
-                                sp4A = 0;
-                            }
-                        }
+                    if (temp < -0x8000) {
+                        temp = 0xFFFF;
                     }
-                    if (sp4A >= 0) {
-                        aiRacer->eggHudCounter = (s8) sp4A;
-                        D_8011D58C[sp4A] = aiRacer->racerIndex + 1;
-                        aiRacer->unk1CD = 4;
-                        aiRacer->unk1C6 = 0x4B0;
+                    if (aiRacer->balloon_level == 1) {
+                        var_v1 = 0x1000;
                     } else {
-                        aiRacer->unk1CD = 2;
-                        aiRacer->unk1C6 = 0x4B0;
+                        var_v1 = 0x800;
                     }
-                } else {
-                    aiRacer->unk1CD = 2;
-                    aiRacer->unk1C6 = 0x12C;
-                }
-                break;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 7:
-                switch (aiRacer->unk1CD) {
-                    case 2:
-                        if (aiRacer->unk1C6 == 0) {
-                            aiRacer->unk1CD = 1;
-                        }
-                        break;
-                    case 3:
-                        if (aiRacer->balloon_type != 0) {
-                            aiRacer->unk1CD = 2;
-                            aiRacer->unk1C6 = 0xB4;
-                        }
-                        break;
-                    case 4:
-                        if ((aiRacer->balloon_quantity == 0) || (aiRacer->unk1C6 == 0)) {
-                            aiRacer->unk1CD = 1;
-                            D_8011D58C[aiRacer->eggHudCounter] = 0;
-                        }
-                        break;
-                    case 5:
-                        if ((D_8011D58C[aiRacer->racerIndex] == 0) || (aiRacer->unk1C6 == 0)) {
-                            aiRacer->unk1CD = 1;
-                        }
-                        break;
-                    case 7:
-                        if (aiRacer->bananas == 0) {
-                            aiRacer->unk1CD = 1;
-                        }
-                        break;
-                }
-                if (aiRacer->unk1CE != 0xFF) {
-                    sp4E = aiRacer->elevation;
-                    tempRacerObj =
-                        ainode_get(aiRacer->unk1CE); // I'm assuming this is a Ai Node (Take with a grain of salt!)
-                    sp3F = tempRacerObj->segment.level_entry->aiNode.elevation;
-                    someBool = FALSE;
-                    if (sp6C->aiNode.elevation < sp3F) {
-                        if ((sp3F < sp4E) || (sp4E < sp6C->aiNode.elevation)) {
-                            someBool = TRUE;
-                        }
-                    } else {
-#ifdef FAKEMATCH
-                        if (!(&sp74->segment)) {} // Fake
-#endif
-                        if ((sp6C->aiNode.elevation < sp4E) || (sp4E < sp3F)) {
-                            someBool = TRUE;
-                        }
-                    }
-                    if (someBool) {
-                        if (aiRacer->unk1CD == 4) {
-                            D_8011D58C[aiRacer->eggHudCounter] = 0;
-                        }
-                        aiRacer->unk1CD = 6;
-                    }
-                }
-                if ((gCurrentStickX > -30) && (gCurrentStickX < 30)) {
-                    if (aiRacer->velocity > -10.0) {
-                        gCurrentRacerInput = A_BUTTON;
-                    }
-                } else {
-                    if (aiRacer->velocity > -4.0) {
-                        gCurrentRacerInput = (A_BUTTON | B_BUTTON);
-                    } else {
-                        gCurrentRacerInput = B_BUTTON;
-                    }
-                    if (aiRacer->velocity > -1.0) {
-                        gCurrentRacerInput = A_BUTTON;
-                    }
-                }
-                if (aiRacer->nodeCurrent != NULL) {
-                    xDiff = aiRacer->nodeCurrent->segment.trans.x_position - sp74->segment.trans.x_position;
-                    zDiff = aiRacer->nodeCurrent->segment.trans.z_position - sp74->segment.trans.z_position;
-                    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) > 0.0) {
-                        temp = (arctan2_f(xDiff, zDiff) - 0x8000) & 0xFFFF;
-                        var_v1 = temp - (aiRacer->steerVisualRotation & 0xFFFF);
-                        if (var_v1 > 0x8000) {
-                            var_v1 -= 0xFFFF;
-                        }
-                        if (var_v1 < -0x8000) {
-                            var_v1 += 0xFFFF;
-                        }
-                        if ((var_v1 > 0x1500) || (var_v1 < -0x1500)) {
-                            if (aiRacer->velocity > -4.0) {
-                                gCurrentRacerInput = (A_BUTTON | B_BUTTON);
-                            } else {
-                                gCurrentRacerInput = B_BUTTON;
-                            }
-                        }
-                    }
-                }
-                if (dist < 300.0) {
-                    if (aiRacer->nodeCurrent == NULL) {
-                        switch (aiRacer->unk1CD) {
-                            case 3:
-                                temp =
-                                    func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
-                                break;
-                            case 4:
-                                tempRacerObj = get_racer_object(aiRacer->eggHudCounter);
-                                tempRacer = tempRacerObj->unk64;
-#ifdef FAKEMATCH
-                                if (tempRacerObj->unk64->racer.playerIndex == -1) {
-#else
-                                if (tempRacer->racer.playerIndex == -1) {
-#endif
-                                    temp = func_8001CD28(
-                                        sp6C->animation.x_rotation,
-                                        tempRacer->racer.unk154->segment.level_entry->animation.x_rotation | 0x100,
-                                        aiRacer->unk1CE, aiRacer->racerIndex);
-                                } else {
-                                    temp = ainode_find_nearest(tempRacerObj->segment.trans.x_position,
-                                                               tempRacerObj->segment.trans.y_position,
-                                                               tempRacerObj->segment.trans.z_position, 0);
-                                    temp = func_8001CD28(sp6C->animation.x_rotation, temp | 0x100, aiRacer->unk1CE,
-                                                         aiRacer->racerIndex);
-                                }
-                                break;
-                            case 5:
-                                temp =
-                                    func_8001CD28(sp6C->animation.x_rotation, 1, aiRacer->unk1CE, aiRacer->racerIndex);
-                                break;
-                            case 7:
-                                temp = func_8001CD28(sp6C->animation.x_rotation, aiRacer->racerIndex + 4,
-                                                     aiRacer->unk1CE, aiRacer->racerIndex);
-                                break;
-                            default:
-#ifdef FAKEMATCH
-                                temp = ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE,
-                                                        aiRacer->racerIndex & 0xFFFFFFFFFFFFFFFFu); // Fake
-#else
-                                temp =
-                                    ainode_find_next(sp6C->animation.x_rotation, aiRacer->unk1CE, aiRacer->racerIndex);
-#endif
-                                break;
-                        }
-
-                        if (temp != 0xFF) {
-                            aiRacer->nodeCurrent = ainode_get(temp);
-                        } else {
-                            if (aiRacer->unk1CE != 0xFF) {
-                                aiRacer->nodeCurrent = ainode_get(aiRacer->unk1CE);
-                            } else {
-                                aiRacer->nodeCurrent = NULL;
-                            }
-                        }
-                    }
-                }
-                if (dist < 50.0 || (dist > 320.0 && aiRacer->nodeCurrent != NULL)) {
-                    aiRacer->unk1CE = sp6C->animation.x_rotation;
-                    aiRacer->unk154 = aiRacer->nodeCurrent;
-                    if (aiRacer->nodeCurrent == NULL) {
-                        aiRacer->unk1CD = 0;
-                    }
-                    aiRacer->nodeCurrent = NULL;
-                }
-                break;
-            case 6:
-                temp = ainode_find_nearest(aiRacerObj->segment.trans.x_position, aiRacerObj->segment.trans.y_position,
-                                           aiRacerObj->segment.trans.z_position, 2);
-                if (temp != 0xFF) {
-                    aiRacer->unk154 = ainode_get(temp);
-                    aiRacer->unk1CD = 1;
-                    aiRacer->unk1CE = 0xFF;
-                }
-                aiRacer->unk1C9 = 1;
-                break;
-        }
-        for (i = 0; i < 4; i++) {
-            if (i != aiRacer->racerIndex) {
-                tempRacerObj = get_racer_object(i);
-#ifdef FAKEMATCH
-                if (tempRacerObj->unk64->racer.playerIndex != -1) {
-                    D_8011D5B4[i] = tempRacerObj->unk64->racer.elevation;
-                }
-#else
-                tempRacer = tempRacerObj->unk64;
-                if (tempRacer->racer.playerIndex != -1) {
-                    D_8011D5B4[i] = tempRacer->racer.elevation;
-                }
-#endif
-                if (D_8011D5B4[aiRacer->racerIndex] == D_8011D5B4[i]) {
-                    xDiff = aiRacerObj->segment.trans.x_position - tempRacerObj->segment.trans.x_position;
-                    zDiff = aiRacerObj->segment.trans.z_position - tempRacerObj->segment.trans.z_position;
-                    if (sqrtf((xDiff * xDiff) + (zDiff * zDiff)) < 800.0) {
-                        temp = arctan2_f(xDiff, zDiff);
-                        temp -= (aiRacerObj->segment.trans.rotation.y_rotation & 0xFFFF);
-                        if (temp > 0x8000) {
-                            temp = -0xFFFF;
-                        }
-                        if (temp < -0x8000) {
-                            temp = 0xFFFF;
-                        }
-                        if (aiRacer->balloon_level == 1) {
-                            var_v1 = 0x1000;
-                        } else {
-                            var_v1 = 0x800;
-                        }
-                        if ((-var_v1 < temp) && (temp < var_v1)) {
-                            gCurrentButtonsReleased |= Z_TRIG;
-                        }
+                    if ((-var_v1 < temp) && (temp < var_v1)) {
+                        gCurrentButtonsReleased |= Z_TRIG;
                     }
                 }
             }
@@ -1043,7 +1046,7 @@ void func_80045128(Object **racerObjs) {
     }
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_800452A0.s") // https://decomp.me/scratch/HSAE4
 
 #ifdef NON_EQUIVALENT
 void func_80045C48(Object *obj, Object_Racer *racer, s32 updateRate) {
@@ -2226,7 +2229,7 @@ f32 rotate_racer_in_water(Object *obj, Object_Racer *racer, Vec3f *pos, s8 arg3,
     return velocity;
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s") // https://decomp.me/scratch/ZIUaE
 
 /**
  * When turning left and right in a plane, apply the tilting animation to the character.
@@ -2527,7 +2530,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/update_camera_plane.s")
 #endif
 
-#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/racer/func_8004CC20.s") // https://decomp.me/scratch/yfGqf
 
 /**
  * Handles the camera movement when the player is on a loop-the-loop.

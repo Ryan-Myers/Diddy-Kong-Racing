@@ -671,7 +671,7 @@ s32 func_80060C58(Vertex *vertices, s32 i1, s32 i2, s32 i3, s32 i4) {
 #undef NEARBY
 }
 
-#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060EA8.s")
+#pragma GLOBAL_ASM("asm/nonmatchings/object_models/func_80060EA8.s") // Nothing
 
 void func_800619F4(s32 arg0) {
     D_8011D640 = arg0;
