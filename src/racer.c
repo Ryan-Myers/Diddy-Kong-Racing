@@ -3377,6 +3377,8 @@ void func_80049794(s32 updateRate, f32 updateRateF, Object *obj, Object_Racer *r
         func_800230D0(obj, racer);
     }
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/racer", func_80049794);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/racer/func_80049794.s")
 #endif

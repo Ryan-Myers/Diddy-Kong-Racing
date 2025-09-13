@@ -937,6 +937,11 @@ int vsprintf(char *s, const char *fmt, va_list args) {
     *s = 0;
     return done;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/printf", vsprintf);
+const char D_800E8C50[] = "";
+const char D_800E8C54[] = "(null)";
+const char D_800E8C5C[] = "(nil)";
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/printf/vsprintf.s")
 const char D_800E8C50[] = "";

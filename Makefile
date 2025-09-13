@@ -62,6 +62,7 @@ endef
 BIN_DIRS  = assets
 BUILD_DIR = build
 SRC_DIR   = src
+LIBGCC_DIR   = mods/libgcc
 LIBULTRA_DIR = libultra
 ASM_DIRS  = asm asm/data asm/assets asm/nonmatchings
 HASM_DIRS = $(SRC_DIR)/hasm $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/gu $(LIBULTRA_DIR)/src/libc
@@ -70,10 +71,17 @@ LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/debug $(LIBULTRA_DIR)/src/gu $(LIBULTRA
 LIBULTRA_SRC_DIRS += $(LIBULTRA_DIR)/src/libc $(LIBULTRA_DIR)/src/os $(LIBULTRA_DIR)/src/sc
 
 # Files requiring pre/post-processing
+ifeq ($(COMPILER),ido)
 GLOBAL_ASM_C_FILES := $(shell $(GREP) GLOBAL_ASM $(SRC_DIR) </dev/null 2>/dev/null)
+else
+GLOBAL_ASM_C_FILES := # Don't compile any C files with asm-processor when using gcc
+endif
 GLOBAL_ASM_O_FILES := $(patsubst %.c,$(BUILD_DIR)/%.c.o,$(GLOBAL_ASM_C_FILES))
 
 SRC_DIRS = $(SRC_DIR) $(LIBULTRA_SRC_DIRS)
+ifeq ($(COMPILER),gcc)
+SRC_DIRS += $(LIBGCC_DIR)
+endif
 SYMBOLS_DIR = ver/symbols
 
 TOOLS_DIR = tools
@@ -185,7 +193,7 @@ C_DEFINES += -DCIC_ID=$(BOOT_CIC)
 
 INCLUDE_CFLAGS  = -I . -I include -I include/libc  -I include/PR -I include/sys -I $(BIN_DIRS) -I $(SRC_DIR) -I $(LIBULTRA_DIR)
 INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/gu -I $(LIBULTRA_DIR)/src/libc -I $(LIBULTRA_DIR)/src/io  -I $(LIBULTRA_DIR)/src/sc
-INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os
+INCLUDE_CFLAGS += -I $(LIBULTRA_DIR)/src/audio -I $(LIBULTRA_DIR)/src/os -I $(LIBGCC_DIR)
 
 ASFLAGS        = -march=vr4300 -32 -G0 $(ASM_DEFINES) $(INCLUDE_CFLAGS)
 OBJCOPYFLAGS   = -O binary
@@ -285,7 +293,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 ### Targets
 
 ifeq ($(COMPILER),gcc)
-	DUMMY != $(PYTHON) $(TOOLS_DIR)/python/gcc_generate.py gcc_safe_files.mk
+#DUMMY != $(PYTHON) $(TOOLS_DIR)/python/gcc_generate.py gcc_safe_files.mk
 	include gcc_safe_files.mk
 endif
 

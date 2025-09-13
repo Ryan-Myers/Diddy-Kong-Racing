@@ -8931,6 +8931,8 @@ void func_8008FF1C(UNUSED s32 updateRate) {
     }
     gTrackSelectVertsFlip = 1 - gTrackSelectVertsFlip;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/menu", func_8008FF1C);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/menu/func_8008FF1C.s")
 #endif

@@ -445,6 +445,8 @@ void init_particle_buffers(s32 maxTriangleParticles, s32 maxRectangleParticles, 
         mempool_free(asset2F);
     }
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/particles", init_particle_buffers);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/particles/init_particle_buffers.s")
 #endif

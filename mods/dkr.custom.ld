@@ -39,6 +39,7 @@ SECTIONS
         build/src/hasm/entrypoint.s.o(.text);
         build/src*.o(.text);
         build/libultra/src*.o(.text);
+        build/mods/libgcc*.o(.text);
         build/asm/data/aspMain.s.o(.text);
         build/asm/data/rspboot.s.o(.text);
         build/asm/data/f3ddkr_dram.s.o(.text);
@@ -51,6 +52,7 @@ SECTIONS
         main_DATA_START = .;
         build/src*.o(.data*);
         build/libultra/src*.o(.data);
+        build/mods/libgcc*.o(.data);
         build/asm/data/aspMain.s.o(.data);
         build/asm/data/f3ddkr_dram.s.o(.data);
         build/asm/data/f3ddkr_fifo.s.o(.data);
@@ -62,6 +64,7 @@ SECTIONS
         main_RODATA_START = .;
         build/src*.o(.rodata*);
         build/libultra/src*.o(.rodata*);
+        build/mods/libgcc*.o(.rodata*);
         . = ALIGN(., 16);
         main_RODATA_END = .;
         main_RODATA_SIZE = ABSOLUTE(main_RODATA_END - main_RODATA_START);
@@ -74,6 +77,7 @@ SECTIONS
 
         build/src*.o(.*bss*);
         build/libultra/src*.o(.*bss*);
+        build/mods/libgcc*.o(.*bss*);
         . = ALIGN(., 16);
         main_BSS_END = .;
         main_BSS_SIZE = ABSOLUTE(main_BSS_END - main_BSS_START);
@@ -97,6 +101,14 @@ SECTIONS
     __romPos += SIZEOF(.assets);
     assets_ROM_END = __romPos;
     assets_VRAM_END = .;
+
+    .rodata :
+    {
+        *(.rodata)
+        *(.rodata.*)
+        *(.late_rodata)
+        *(.late_rodata.*)
+    }
 
     .strtab 0 :
     {

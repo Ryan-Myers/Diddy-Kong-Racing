@@ -1526,6 +1526,8 @@ void trackbg_render_flashy(void) {
     gTrackVtxPtr = verts;
     gTrackTriPtr = tris;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/tracks", trackbg_render_flashy);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/trackbg_render_flashy.s")
 #endif
@@ -2682,6 +2684,8 @@ s32 func_8002B0F4(s32 levelSegmentIndex, f32 xIn, f32 zIn, WaterProperties ***ar
     D_8011D308 = yOutCount;
     return yOutCount;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/tracks", func_8002B0F4);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/tracks/func_8002B0F4.s")
 #endif
@@ -3647,7 +3651,7 @@ void shadow_generate(Object *obj, s32 isWater) {
             obj->shading->unk0 = func_8002FA64();
         }
         func_8002F2AC();
-        func_8002F440();
+        func_8002F440(); // Crashes when yPos == 402 and then func_8002F440 is called.
     }
     if (isWater == FALSE) {
         obj->shadow->meshEnd = gShadowTail;

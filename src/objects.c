@@ -5361,7 +5361,8 @@ s32 collision_objectmodel(Object *obj, s32 arg1, s32 *arg2, Vec3f *arg3, f32 *ar
     }
     return sp168;
 }
-
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/objects", collision_objectmodel);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/collision_objectmodel.s")
 #endif
@@ -5540,6 +5541,8 @@ s32 func_80017A18(ObjectModel *arg0, s32 arg1, s32 *arg2, f32 *arg3, f32 *arg4, 
 
     return spF8;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/objects", func_80017A18);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/objects/func_80017A18.s")
 #endif

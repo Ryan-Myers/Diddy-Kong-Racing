@@ -2068,6 +2068,8 @@ s32 func_800BDC80(s32 arg0, unk8011C3B8 *arg1, unk8011C8B8 *arg2, f32 shadowXNeg
 
     return counter;
 }
+#elif !defined(__sgi)
+INCLUDE_ASM("asm/nonmatchings/waves", func_800BDC80);
 #else
 #pragma GLOBAL_ASM("asm/nonmatchings/waves/func_800BDC80.s")
 #endif

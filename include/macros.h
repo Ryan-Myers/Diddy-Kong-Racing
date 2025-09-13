@@ -5,6 +5,15 @@
 
 #ifndef __sgi
 #define GLOBAL_ASM(...)
+#define INCLUDE_ASM(FOLDER, NAME) \
+    __asm__( \
+        "    .set noat\n" \
+        "    .set noreorder\n" \
+        "    .include \"include/macro.inc\"\n" \
+        "    .include \"" FOLDER "/" #NAME ".s\"\n" \
+        "    .set reorder\n" \
+        "    .set at\n" \
+    )
 #endif
 
 #if !defined(__sgi) && (!defined(NON_MATCHING) || !defined(AVOID_UB))
