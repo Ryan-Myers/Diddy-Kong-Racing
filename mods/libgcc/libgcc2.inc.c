@@ -370,7 +370,6 @@ DItype __fixunsdfdi(DFtype a) {
 #endif
 
 #ifdef L_fixdfdi
-
 // u64 -> f32
 f32 __floatundisf(u64 c) {
     register union {
@@ -404,6 +403,7 @@ f64 __floatundidf(u64 c) {
     }
     return v;
 }
+
 DItype __fixdfdi(DFtype a) {
     if (a < 0) {
         return -__fixunsdfdi(-a);
