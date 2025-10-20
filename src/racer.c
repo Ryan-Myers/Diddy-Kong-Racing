@@ -5704,9 +5704,9 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
         racer->characterAnimState = ANIM_STATE_HORN;
     }
     if (racer->boostTimer != 0) {
-        racer->unk1F3 |= 4;
+        racer->characterAnimFlags |= 4;
     }
-    if (racer->unk1F3 & 8) {
+    if (racer->characterAnimFlags & ANIM_FLAG_CRASH) {
         if (gNumViewports < 3) {
             if (gCurrentPlayerIndex >= PLAYER_ONE) {
                 obj->particleEmittersEnabled |= OBJ_EMIT_21;
@@ -5717,12 +5717,12 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
         racer->characterAnimState = ANIM_STATE_CRASH;
     }
     if (gRaceStartTimer != 0) {
-        racer->unk1F3 = 0;
+        racer->characterAnimFlags = ANIM_FLAG_NONE;
         racer->characterAnimState = ANIM_STATE_NORMAL;
     }
     if (racer->raceFinished == TRUE) {
         racer->characterAnimState = ANIM_STATE_NORMAL;
-        racer->unk1F3 = 0;
+        racer->characterAnimFlags = ANIM_FLAG_NONE;
     }
     switch (racer->characterAnimState) {
         case ANIM_STATE_NORMAL: // Sliding, creating tyre marks
@@ -5751,9 +5751,9 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
             obj->animFrame += angleVel;
             obj->animationID = 0;
             if (angleVel) {} // Fakematch
-            if (racer->unk1F3 & 4) {
+            if (racer->characterAnimFlags & ANIM_FLAG_BOOST) {
                 racer->characterAnimState = ANIM_STATE_BOOST;
-                racer->unk1F3 &= 0xFFFB;
+                racer->characterAnimFlags &= ~ANIM_FLAG_BOOST; // Clear Boost flag
             }
             if (racer->velocity > 0.0 && gCurrentRacerInput & B_BUTTON) {
                 racer->characterAnimState = ANIM_STATE_REVERSE;
@@ -5761,15 +5761,15 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
             break;
         case ANIM_STATE_BOOST: // Boost
             actionStatus = 2;
-            if (racer->unk1F3 & 4) {
+            if (racer->characterAnimFlags & ANIM_FLAG_BOOST) {
                 actionStatus = 4 | 2;
             }
             func_80052988(obj, racer, 2, 0, 32, 4, actionStatus, updateRate);
-            racer->unk1F3 &= 0xFFFB;
+            racer->characterAnimFlags &= ~ANIM_FLAG_BOOST; // Clear Boost flag
             break;
         case ANIM_STATE_CRASH: // Crash
             func_80052988(obj, racer, 3, 0, 32, 2, 0, updateRate);
-            racer->unk1F3 &= 0xFFF7;
+            racer->characterAnimFlags &= ~ANIM_FLAG_CRASH; // Clear Crash flag
             break;
         case ANIM_STATE_HORN: // Horn
             actionStatus = 2;
@@ -5821,24 +5821,24 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
         } else {
             obj->animationID = action;
             obj->animFrame = arg3;
-            racer->unk1F3 &= ~0x80;
+            racer->characterAnimFlags &= ~ANIM_FLAG_REVERSE; // Clear Reverse flag
         }
     } else if (obj->animationID == action) {
         if (flags & 2) {
-            if (racer->unk1F3 & 0x80) {
+            if (racer->characterAnimFlags & ANIM_FLAG_REVERSE) {
                 obj->animFrame -= arg5; //!@Delta
                 if (obj->animFrame <= 0) {
                     obj->animationID = 0;
                     racer->characterAnimState = ANIM_STATE_NORMAL;
                     obj->animFrame = 40;
-                    racer->unk1F3 = 0;
+                    racer->characterAnimFlags = ANIM_FLAG_NONE;
                 }
             } else {
                 obj->animFrame += arg5; //!@Delta
                 if (obj->animFrame >= duration) {
                     obj->animFrame = duration - 1;
                     if (!(flags & 4)) {
-                        racer->unk1F3 |= 0x80;
+                        racer->characterAnimFlags |= ANIM_FLAG_REVERSE;
                     }
                 }
             }
@@ -5848,7 +5848,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                 obj->animationID = 0;
                 racer->characterAnimState = ANIM_STATE_NORMAL;
                 obj->animFrame = 40;
-                racer->unk1F3 = 0;
+                racer->characterAnimFlags = ANIM_FLAG_NONE;
             }
         }
     } else {
@@ -6715,7 +6715,7 @@ void func_80054FD0(Object *racerObj, Object_Racer *racer, s32 updateRate) {
                 rumble_set_fade(racer->playerIndex, 18, sp178 * 0.125);
             }
             if (sp178 > 4.0) {
-                racer->unk1F3 |= 8;
+                racer->characterAnimFlags |= ANIM_FLAG_CRASH;
                 if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
                     gCameraObject->shakeMagnitude = 3.0f;
                 }

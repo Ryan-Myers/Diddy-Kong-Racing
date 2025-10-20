@@ -143,6 +143,13 @@ typedef enum AnimationState {
     ANIM_STATE_SPECIAL
 } AnimationState;
 
+typedef enum AnimationStateFlags {
+    ANIM_FLAG_NONE = 0,
+    ANIM_FLAG_BOOST = (1 << 2), // Boost animation pending
+    ANIM_FLAG_CRASH = (1 << 3), // Crash animation pending
+    ANIM_FLAG_REVERSE = (1 << 7), // Animation playing in reverse
+} AnimationStateFlags;
+
 #define AI_MIN 0
 #define AI_MAX 1
 #define AI_MIN_STEP 2

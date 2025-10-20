@@ -4946,7 +4946,7 @@ void func_80016500(Object *obj, Object_Racer *racer) {
             if (!racer->raceFinished) {
                 rumble_set(racer->playerIndex, RUMBLE_TYPE_18);
             }
-            racer->unk1F3 |= 8;
+            racer->characterAnimFlags |= ANIM_FLAG_CRASH;
         }
         if (volume > 55) {
             play_random_character_voice(obj, SOUND_VOICE_CHARACTER_NEGATIVE, 8, 1);
