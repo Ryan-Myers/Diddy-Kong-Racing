@@ -548,7 +548,7 @@ void increment_ai_behaviour_chances(Object *obj, Object_Racer *racer, s32 update
         return;
     }
     aiTable = aitable_get();
-    if (racer->boostTimer) {
+    if (racer->boostTimer != 0) {
         if (sAIStartedBoosting == FALSE) {
             aiTable->percentages[AI_BLUE_BALLOON][AI_MIN] += aiTable->percentages[AI_BLUE_BALLOON][AI_MIN_STEP];
             aiTable->percentages[AI_BLUE_BALLOON][AI_MAX] += aiTable->percentages[AI_BLUE_BALLOON][AI_MAX_STEP];
@@ -2461,7 +2461,7 @@ void update_camera_hovercraft(f32 updateRate, Object *obj, Object_Racer *racer) 
     }
     gCameraObject->trans.y_position -= yVel;
     gCameraObject->trans.rotation.z_rotation = 0;
-    if (gRaceStartTimer) {
+    if (gRaceStartTimer != 0) {
         gCameraObject->trans.y_position = obj->trans.y_position + phi_f18;
     }
 
@@ -3599,7 +3599,7 @@ void update_camera_plane(f32 updateRate, Object *obj, Object_Racer *racer) {
         }
         baseFloat2 -= var_f16;
     }
-    if (!gRaceStartTimer) {
+    if (gRaceStartTimer == 0) {
         if (normalise_time(36) < racer->boostTimer) {
             baseFloat2 = -30.0f;
         } else if (racer->boostTimer > 0) {
@@ -4361,7 +4361,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         } else {
             tempRacer->unk18A = 0;
         }
-        if (tempRacer->magnetTimer) {
+        if (tempRacer->magnetTimer != 0) {
             racer_activate_magnet(obj, tempRacer, updateRate);
         }
         // Zero out input before the race has begun.
@@ -4484,7 +4484,7 @@ void update_player_racer(Object *obj, s32 updateRate) {
         }
         checkpointNode = find_next_checkpoint_node(tempRacer->nextCheckpoint, tempRacer->isOnAlternateRoute);
         if (tempRacer->playerIndex == PLAYER_COMPUTER && checkpointNode->unk36[tempRacer->unk1CA] == 5 &&
-            tempRacer->waterTimer) {
+            tempRacer->waterTimer != 0) {
             tempRacer->isOnAlternateRoute = TRUE;
         }
         if (checkpointNode->unk36[tempRacer->unk1CA] == 6) {
@@ -5613,13 +5613,13 @@ void handle_racer_head_turning(Object *obj, Object_Racer *racer, UNUSED s32 upda
     }
     if (foundObj == FALSE) {
         tempObj = racer_find_nearest_opponent_relative(racer, 1, &distance);
-        if (tempObj && !gRaceStartTimer) {
+        if (tempObj && gRaceStartTimer == 0) {
             foundObj = turn_head_towards_object(obj, racer, tempObj, 400.0f * 400.0f);
         }
     }
     if (foundObj == FALSE) {
         tempObj = racer_find_nearest_opponent_relative(racer, -1, &distance);
-        if (tempObj && !gRaceStartTimer) {
+        if (tempObj && gRaceStartTimer == 0) {
             foundObj = turn_head_towards_object(obj, racer, tempObj, 30000.0f);
         }
     }
@@ -5703,7 +5703,7 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (gCurrentButtonsPressed & Z_TRIG && angleVel != 4 && angleVel != 8) {
         racer->characterAnimState = ANIM_STATE_HORN;
     }
-    if (racer->boostTimer) {
+    if (racer->boostTimer != 0) {
         racer->unk1F3 |= 4;
     }
     if (racer->unk1F3 & 8) {
@@ -5979,7 +5979,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
     }
     racer->steerVisualRotation -= angle & 0xFFFF;
     gCurrentCarSteerVel = racer->unk110;
-    if (racer->boostTimer) {
+    if (racer->boostTimer != 0) {
         if (racer->velocity > -20.0) {
             racer->velocity -= 1.6; //!@Delta
         }
@@ -6020,7 +6020,7 @@ void update_car_velocity_offground(Object *obj, Object_Racer *racer, s32 updateR
             weight *= 0.53;
         }
     }
-    if (racer->boostTimer) {
+    if (racer->boostTimer != 0) {
         weight *= 0.5;
     }
     yStick = -yStick;
@@ -6338,7 +6338,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
     func_800575EC(obj, racer);
     handle_racer_items(obj, racer, updateRate);
     racer_attack_handler_car(obj, racer, updateRate);
-    if (racer->spinout_timer) {
+    if (racer->spinout_timer != 0) {
         racer_spinout_car(obj, racer, updateRate, updateRateF); // Sbinalla
     } else if (racer->groundedWheels > 0) {
         update_car_velocity_ground(obj, racer, updateRate, updateRateF);
@@ -6402,7 +6402,7 @@ void update_onscreen_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, 
         mtxf_transform_point(mtx, racer->lateral_velocity, 0.0f, racer->velocity, &obj->x_velocity, &tempVel,
                              &obj->z_velocity);
     }
-    if (racer->magnetTimer) {
+    if (racer->magnetTimer != 0) {
         obj->x_velocity = gRacerMagnetVelX;
         obj->z_velocity = gRacerMagnetVelZ;
     }
@@ -7194,7 +7194,7 @@ void handle_racer_items(Object *obj, Object_Racer *racer, UNUSED s32 updateRate)
                     spawnedObj->z_velocity = obj->z_velocity - (racer->oz1 * velocity);
                     spawnedObj->trans.rotation.y_rotation = obj->trans.rotation.y_rotation;
                     spawnedObj->trans.rotation.x_rotation = obj->trans.rotation.x_rotation;
-                    if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->waterTimer) {
+                    if (racer->vehicleID == VEHICLE_HOVERCRAFT && racer->waterTimer != 0) {
                         if (spawnedObj->trans.rotation.x_rotation > -0x400 &&
                             spawnedObj->trans.rotation.x_rotation < 0x400) {
                             spawnedObj->trans.rotation.x_rotation = 0;
@@ -7468,11 +7468,11 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     // If you want to change the baseline speed of vehicles, this is what you change.
     speedMultiplier = 1.0f;
     // Set the player's top speed to 0 before the race starts, so you can't jump the start.
-    if (gRaceStartTimer) {
+    if (gRaceStartTimer != 0) {
         speedMultiplier = 0.0f;
     }
     timer3 = get_race_start_timer();
-    if (gRaceStartTimer) {} // Fakematch
+    if (gRaceStartTimer != 0) {} // Fakematch
     // If the A button is held for the first time, 30 frames prior to starting,
     // decide how much boost to add based on when it was pressed.
     if (gRaceStartTimer > 0 && gRaceStartTimer < 30 && !racer->startInput) {
@@ -7530,7 +7530,7 @@ f32 handle_racer_top_speed(Object *obj, Object_Racer *racer) {
     if (gRaceStartTimer < 80 && gCurrentButtonsPressed & A_BUTTON) {
         racer->startInput = 1;
     }
-    if (!gRaceStartTimer) {
+    if (gRaceStartTimer == 0) {
         if (racer->boost_sound & BOOST_RACE_START) {
             racer->boost_sound &= ~BOOST_RACE_START;
             play_random_character_voice(obj, SOUND_VOICE_CHARACTER_POSITIVE, 8, 130);
@@ -7965,7 +7965,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         lateralOffset = -(f32) racer->drift_direction * 12.0f;
     }
     racer->unkC8 += (lateralOffset - racer->unkC8) * 0.125;
-    if (racer->spinout_timer) {
+    if (racer->spinout_timer != 0) {
         racer->camera_zoom -= racer->camera_zoom * 0.25;
     } else {
         racer->camera_zoom += (10.0 - racer->camera_zoom) * 0.25;
@@ -7981,7 +7981,7 @@ void update_camera_car(f32 updateRate, Object *obj, Object_Racer *racer) {
         gCameraObject->trans.y_position -= sp38 + 2.0;
     }
     gCameraObject->trans.y_position -= sp38 * 0.25;
-    if (sp38 > 0.0f || gRaceStartTimer) {
+    if (sp38 > 0.0f || gRaceStartTimer != 0) {
         gCameraObject->trans.y_position = lateralOffset;
     }
     tempVel = (-coss_f(racer->cameraYaw + 0x4000) * racer->unkC8);
@@ -8851,7 +8851,7 @@ void update_AI_racer(Object *obj, Object_Racer *racer, s32 updateRate, f32 updat
         checkpoint = find_next_checkpoint_node(racer->nextCheckpoint, racer->isOnAlternateRoute);
         if (checkpoint->unk36[racer->unk1CA] == 5) {
             racer->unk201 = 30;
-            if (racer->waterTimer) {
+            if (racer->waterTimer != 0) {
                 racer->isOnAlternateRoute = TRUE;
             }
         }
