@@ -3392,10 +3392,16 @@ void apply_plane_tilt_anim(s32 updateRate, Object *obj, Object_Racer *racer) {
     s32 animAdd;
 
     if (racer->vehicleIDPrev != VEHICLE_CARPET) {
+#ifdef AVOID_UB
+        if (racer->characterAnimState == ANIM_STATE_NORMAL) {
+            return;
+        }
+#else
         //!@bug Typo. Should've been `== 0`, not `= 0`.
-        if ((racer->unk1F2 = 0)) {
+        if ((racer->characterAnimState = ANIM_STATE_NORMAL)) {
             return; // This never gets called because of the typo.
         }
+#endif
         animAdd = racer->steerAngle;
         animAdd = 40 - (animAdd >> 1);
         if (animAdd < 0) {
@@ -5026,7 +5032,7 @@ void racer_approach_object(Object *obj, Object_Racer *racer, f32 divisor) {
     obj->y_velocity = diffY / divisor;
     obj->z_velocity = diffZ / divisor;
     racer->velocity = 0.0f;
-    racer->unk1F2 = 0;
+    racer->characterAnimState = ANIM_STATE_NORMAL;
     racer->lateral_velocity = 0.0f;
 }
 
@@ -5565,7 +5571,7 @@ void func_80050A28(Object *obj, Object_Racer *racer, s32 updateRate, f32 updateR
         if (gCurrentPlayerIndex != PLAYER_COMPUTER) {
             if (racer->wheel_surfaces[0] != SURFACE_NONE) {
                 D_8011D550 = D_800DCCCC[racer->wheel_surfaces[0]];
-                *((s16 *) &D_8011D552) = racer->trickType; // necessary because a different function expects a char.
+                D_8011D552 = racer->trickType;
                 racer->trickType = 0;
             }
         }
@@ -5695,7 +5701,7 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
         angleVel = balloonAsset[(racer->balloon_type * 10) + (racer->balloon_level * 2)];
     }
     if (gCurrentButtonsPressed & Z_TRIG && angleVel != 4 && angleVel != 8) {
-        racer->unk1F2 = 5;
+        racer->characterAnimState = ANIM_STATE_HORN;
     }
     if (racer->boostTimer) {
         racer->unk1F3 |= 4;
@@ -5703,23 +5709,23 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
     if (racer->unk1F3 & 8) {
         if (gNumViewports < 3) {
             if (gCurrentPlayerIndex >= PLAYER_ONE) {
-                obj->particleEmittersEnabled |= 0x100000;
+                obj->particleEmittersEnabled |= OBJ_EMIT_21;
             } else {
-                obj->particleEmittersEnabled |= 0x80000;
+                obj->particleEmittersEnabled |= OBJ_EMIT_20;
             }
         }
-        racer->unk1F2 = 4;
+        racer->characterAnimState = ANIM_STATE_CRASH;
     }
-    if (gRaceStartTimer) {
+    if (gRaceStartTimer != 0) {
         racer->unk1F3 = 0;
-        racer->unk1F2 = 0;
+        racer->characterAnimState = ANIM_STATE_NORMAL;
     }
     if (racer->raceFinished == TRUE) {
-        racer->unk1F2 = 0;
+        racer->characterAnimState = ANIM_STATE_NORMAL;
         racer->unk1F3 = 0;
     }
-    switch (racer->unk1F2) {
-        case 0: // Sliding, creating tyre marks
+    switch (racer->characterAnimState) {
+        case ANIM_STATE_NORMAL: // Sliding, creating tyre marks
             angleVel = (s32) ((-racer->y_rotation_vel >> 8) / gCurrentRacerHandlingStat);
             angleVel = 40 - angleVel;
             if (angleVel < 0) {
@@ -5746,14 +5752,14 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
             obj->animationID = 0;
             if (angleVel) {} // Fakematch
             if (racer->unk1F3 & 4) {
-                racer->unk1F2 = 3;
+                racer->characterAnimState = ANIM_STATE_BOOST;
                 racer->unk1F3 &= 0xFFFB;
             }
             if (racer->velocity > 0.0 && gCurrentRacerInput & B_BUTTON) {
-                racer->unk1F2 = 6;
+                racer->characterAnimState = ANIM_STATE_REVERSE;
             }
             break;
-        case 3: // Boost
+        case ANIM_STATE_BOOST: // Boost
             actionStatus = 2;
             if (racer->unk1F3 & 4) {
                 actionStatus = 4 | 2;
@@ -5761,27 +5767,28 @@ void func_8005250C(Object *obj, Object_Racer *racer, s32 updateRate) {
             func_80052988(obj, racer, 2, 0, 32, 4, actionStatus, updateRate);
             racer->unk1F3 &= 0xFFFB;
             break;
-        case 4: // Crash
+        case ANIM_STATE_CRASH: // Crash
             func_80052988(obj, racer, 3, 0, 32, 2, 0, updateRate);
             racer->unk1F3 &= 0xFFF7;
             break;
-        case 5: // Horn
+        case ANIM_STATE_HORN: // Horn
             actionStatus = 2;
             if (gCurrentRacerInput & Z_TRIG) {
                 actionStatus = 4 | 2;
             }
             func_80052988(obj, racer, 4, 0, 48, 4, actionStatus, updateRate);
             break;
-        case 6:
+        case ANIM_STATE_REVERSE:
             actionStatus = 3;
             if (racer->velocity > 0.0 && gCurrentRacerInput & B_BUTTON) {
                 actionStatus = 4 | 2 | 1; // Reverse
             }
             func_80052988(obj, racer, 1, 0, 80, 3, actionStatus, updateRate);
             break;
-        case 7:
+        case ANIM_STATE_SPECIAL:
             func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
-            if (racer->unk1F2 == 0) {
+            // If the state was returned to normal, play the special animation again
+            if (racer->characterAnimState == ANIM_STATE_NORMAL) {
                 func_80052988(obj, racer, 5, 0, 96, 4, 0, updateRate);
             }
             break;
@@ -5795,7 +5802,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
 
     if (gCurrentPlayerIndex == PLAYER_COMPUTER && action >= 3) {
         obj->animationID = 0;
-        racer->unk1F2 = 0;
+        racer->characterAnimState = ANIM_STATE_NORMAL;
     } else if (obj->animationID == 0) {
         if (flags & 1) {
             if (obj->animFrame > 40) {
@@ -5822,7 +5829,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
                 obj->animFrame -= arg5; //!@Delta
                 if (obj->animFrame <= 0) {
                     obj->animationID = 0;
-                    racer->unk1F2 = 0;
+                    racer->characterAnimState = ANIM_STATE_NORMAL;
                     obj->animFrame = 40;
                     racer->unk1F3 = 0;
                 }
@@ -5839,7 +5846,7 @@ void func_80052988(Object *obj, Object_Racer *racer, s32 action, s32 arg3, s32 d
             obj->animFrame += arg5; //!@Delta
             if (obj->animFrame >= duration) {
                 obj->animationID = 0;
-                racer->unk1F2 = 0;
+                racer->characterAnimState = ANIM_STATE_NORMAL;
                 obj->animFrame = 40;
                 racer->unk1F3 = 0;
             }
@@ -5865,7 +5872,8 @@ void racer_spinout_car(Object *obj, Object_Racer *racer, s32 updateRate, f32 upd
     angleVel = racer->y_rotation_vel;
     if (gCurrentPlayerIndex > PLAYER_COMPUTER) {
         if (gNumViewports < VIEWPORT_LAYOUT_4_PLAYERS) {
-            obj->particleEmittersEnabled |= 0x4FC00;
+            obj->particleEmittersEnabled |= (OBJ_EMIT_19 | OBJ_EMIT_16 | OBJ_EMIT_15 | OBJ_EMIT_14 | OBJ_EMIT_13 |
+                                                    OBJ_EMIT_12 | OBJ_EMIT_11);
         } else {
             if (racer->wheel_surfaces[2] < SURFACE_NONE) {
                 obj->particleEmittersEnabled |= 1 << (racer->wheel_surfaces[2] * 2);

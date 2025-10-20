@@ -293,7 +293,7 @@ $(BUILD_DIR)/$(LIBULTRA_DIR)/%.c.o: CC_CHECK := :
 ### Targets
 
 ifeq ($(COMPILER),gcc)
-#DUMMY != $(PYTHON) $(TOOLS_DIR)/python/gcc_generate.py gcc_safe_files.mk
+	DUMMY != $(PYTHON) $(TOOLS_DIR)/python/gcc_generate.py gcc_safe_files.mk
 	include gcc_safe_files.mk
 endif
 

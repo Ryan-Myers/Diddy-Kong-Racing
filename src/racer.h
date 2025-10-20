@@ -132,6 +132,17 @@ typedef enum RacerEggFlags {
     RACER_EGG_HELD = (1 << 7) // Egg is held by a racer.
 } RacerEggFlags;
 
+typedef enum AnimationState {
+    ANIM_STATE_NORMAL,
+    ANIM_STATE_UNK1,
+    ANIM_STATE_UNK2,
+    ANIM_STATE_BOOST,
+    ANIM_STATE_CRASH,
+    ANIM_STATE_HORN,
+    ANIM_STATE_REVERSE,
+    ANIM_STATE_SPECIAL
+} AnimationState;
+
 #define AI_MIN 0
 #define AI_MAX 1
 #define AI_MIN_STEP 2

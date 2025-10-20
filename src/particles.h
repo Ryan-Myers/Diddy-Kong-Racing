@@ -35,6 +35,7 @@ enum ObjectEmitterFlags {
     OBJ_EMIT_18 = (1 << 17),
     OBJ_EMIT_19 = (1 << 18),
     OBJ_EMIT_20 = (1 << 19),
+    OBJ_EMIT_21 = (1 << 20),
 };
 
 enum ParticleRandomizationFlags {

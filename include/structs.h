@@ -1305,7 +1305,7 @@ typedef struct Object_Racer {
     /* 0x1EF */ u8 boost_sound;
     /* 0x1F0 */ u8 unk1F0;
     /* 0x1F1 */ u8 unk1F1;
-    /* 0x1F2 */ u8 unk1F2;
+    /* 0x1F2 */ u8 characterAnimState;
     /* 0x1F3 */ u8 unk1F3;
     /* 0x1F4 */ u8 startInput;
     /* 0x1F5 */ u8 zipperDirCorrection;
